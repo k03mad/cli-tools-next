@@ -98,7 +98,7 @@ const logRecords = (arr, name) => {
                     if (lastDomainLog?.lists.length > 0) {
                         foundInLists.push(`— ${domain} ${dim(lastDomainLog.lists.join(', '))}`);
                         lastDomainLog.lists.forEach(elem => {
-                            object.count(listsStat, elem, 1);
+                            object.count(listsStat, elem);
                         });
                     }
                 });
