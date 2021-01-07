@@ -6,9 +6,9 @@
   ],
   "repository": "k03mad/cli-tools-next",
   "bin": {
-    "mad-next-add": "app/add.js",
-    "mad-next-check": "app/check.js",
-    "mad-next-log": "app/log.js"
+    "mad_next_add": "app/add.js",
+    "mad_next_check": "app/check.js",
+    "mad_next_log": "app/log.js"
   },
   "preferGlobal": true,
   "engines": {
