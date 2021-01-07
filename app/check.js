@@ -5,13 +5,17 @@
 const env = require('../env');
 const hexyjs = require('hexyjs');
 const pMap = require('p-map');
-const {cyan, dim, yellow} = require('chalk');
+const {args} = require('../env');
+const {cyan, dim, yellow, green} = require('chalk');
 const {next, request, promise, print} = require('utils-mad');
 
 const concurrency = 4;
 const pause = 5000;
 
-const lists = ['allowlist', 'denylist'];
+const lists = {
+    '-': 'denylist',
+    '+': 'allowlist',
+};
 
 const prepareAnswer = (domain, answer) => answer
     ? `— ${domain} ${dim(answer
@@ -29,16 +33,19 @@ const logRecords = (arr, name) => {
 
 (async () => {
     try {
-        for (const list of lists) {
-            console.log(`\n${yellow(`__${list.toUpperCase()}__`)}`);
+        const [list] = args;
 
-            const domains = await next.list({path: list});
+        if (Object.keys(lists).includes(list)) {
+            const listType = lists[list];
+            console.log(`\n${yellow(`__${listType.toUpperCase()}__`)}`);
+
+            const domains = await next.list({path: listType});
 
             if (domains.length > 0) {
                 // disable personal filters
                 await pMap(domains, domain => next.query({
                     method: 'PATCH',
-                    path: `${list}/hex:${hexyjs.strToHex(domain)}`,
+                    path: `${listType}/hex:${hexyjs.strToHex(domain)}`,
                     json: {active: false},
                 }), {concurrency});
 
@@ -97,11 +104,14 @@ const logRecords = (arr, name) => {
                 // reenable filters
                 await pMap(domains, domain => next.query({
                     method: 'PATCH',
-                    path: `${list}/hex:${hexyjs.strToHex(domain)}`,
+                    path: `${listType}/hex:${hexyjs.strToHex(domain)}`,
                     json: {active: true},
                 }), {concurrency});
             }
+        } else {
+            console.log(`Args: ${green('{type (-|+)}')}`);
         }
+
     } catch (err) {
         print.ex(err, {full: true, exit: true});
     }
