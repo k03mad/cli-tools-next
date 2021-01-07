@@ -7,7 +7,7 @@ const hexyjs = require('hexyjs');
 const pMap = require('p-map');
 const {args} = require('../env');
 const {cyan, dim, yellow, green} = require('chalk');
-const {next, request, promise, print} = require('utils-mad');
+const {next, request, promise, print, object} = require('utils-mad');
 
 const concurrency = 4;
 const pause = 5000;
@@ -90,16 +90,27 @@ const logRecords = (arr, name) => {
 
                 // save allow/block reasons
                 const foundInLists = [];
+                const listsStat = {};
 
                 domains.forEach(domain => {
                     const lastDomainLog = logs.find(elem => elem.name === domain);
 
                     if (lastDomainLog?.lists.length > 0) {
                         foundInLists.push(`— ${domain} ${dim(lastDomainLog.lists.join(', '))}`);
+                        lastDomainLog.lists.forEach(elem => {
+                            object.count(listsStat, elem, 1);
+                        });
                     }
                 });
 
                 logRecords(foundInLists, 'reasons');
+                logRecords(
+                    Object
+                        .entries(listsStat)
+                        .sort((a, b) => b[1] - a[1])
+                        .map(elem => `— ${elem[0]} ${dim(elem[1])}`),
+                    'lists',
+                );
 
                 // reenable filters
                 await pMap(domains, domain => next.query({
