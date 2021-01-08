@@ -23,7 +23,7 @@ const prepareAnswer = (domain, answer) => answer
         .map(elem => elem.data)
         .sort()
         .pop())}`
-    : `!! ${domain} ${dim('no answer')}`;
+    : `— ${domain} ${dim('no answer')}`;
 
 const logRecords = (arr, name) => {
     if (arr.length > 0) {
