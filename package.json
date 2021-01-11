@@ -1,5 +1,6 @@
 {
   "name": "@k03mad/cli-tools-next",
+  "description": "My CLI tools",
   "version": "1.0.5",
   "maintainers": [
     "Kirill Molchanov <k03.mad@gmail.com"
@@ -8,9 +9,9 @@
   "bin": {
     "mad_next_add": "app/add.js",
     "mad_next_check": "app/check.js",
-    "mad_next_log": "app/log.js"
+    "mad_next_log": "app/log.js",
+    "mad_next_susp": "app/susp.js"
   },
-  "preferGlobal": true,
   "engines": {
     "node": ">=14"
   },
@@ -18,17 +19,17 @@
     "chalk": "4.1.0",
     "hexyjs": "2.1.4",
     "p-map": "4.0.0",
-    "utils-mad": "9.11.2",
+    "utils-mad": "9.11.4",
     "yargs": "16.2.0"
   },
   "devDependencies": {
     "eslint": "7.17.0",
     "eslint-config-k03mad": "6.0.4",
-    "eslint-plugin-jsdoc": "30.7.13",
+    "eslint-plugin-jsdoc": "31.0.3",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-sort-requires": "2.1.0",
-    "eslint-plugin-unicorn": "25.0.1",
+    "eslint-plugin-unicorn": "26.0.0",
     "husky": "4.3.7"
   },
   "scripts": {

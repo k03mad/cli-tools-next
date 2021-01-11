@@ -9,5 +9,6 @@ module.exports = {
 
     next: {
         config: process.env.NEXT_DNS_CONFIG,
+        checker: 'Mad-Checker',
     },
 };

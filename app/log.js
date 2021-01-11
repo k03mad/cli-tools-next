@@ -2,13 +2,13 @@
 
 'use strict';
 
-const {args} = require('../env');
+const env = require('../env');
 const {green} = require('chalk');
 const {print, next, hosts} = require('utils-mad');
 
 (async () => {
     try {
-        let [domains, sort = 'on', pages = 100] = args;
+        let [domains, sort = 'on', pages = 100] = env.args;
 
         if (domains !== '-' && domains !== '+') {
             console.log(`Args: ${green('{type (-|+)} {sort (on|off = on)} {pages = 100}')}`);
@@ -48,7 +48,7 @@ const {print, next, hosts} = require('utils-mad');
                 }
 
                 logs.forEach(({status, name, deviceName}) => {
-                    if (deviceName !== 'Mad-Checker') {
+                    if (deviceName !== env.next.checker) {
                         status === 2
                             ? blocked[method](name)
                             : allowed[method](name);

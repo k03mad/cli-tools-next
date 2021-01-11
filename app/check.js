@@ -59,7 +59,7 @@ const logRecords = (arr, name) => {
                 const answers = await pMap(domains, async domain => {
                     const res = await Promise.all([
                         request.doh({domain}),
-                        request.doh({domain, resolver: `https://dns.nextdns.io/${env.next.config}/Mad-Checker`}),
+                        request.doh({domain, resolver: `https://dns.nextdns.io/${env.next.config}/${env.next.checker}`}),
                     ]);
                     return {domain, cloudflare: res[0].Answer, nextdns: res[1].Answer};
                 }, {concurrency});
