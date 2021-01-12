@@ -18,19 +18,20 @@ const searchList = [
     'log', 'logs',
     'marketing', 'metric',
     'pixel',
+    'rum',
     'sentry', 'stats', 'statis',
     'telem',
     'track',
 ];
 
-const exclude = new RegExp([
-    'adaway.org', 'adtidy.org',
-    'blog(\\.|ger\\.)',
-    'catalog[.-]', '\\.cdn.ampproject.org',
-    'loads?[.-]', 'login\\.',
+const exclude = [
+    '-rum.cdnvideo.ru',
+    '.cdn.ampproject.org',
     'dnsotls-ds.metric.gstatic.com',
+    'forum.',
+    'login.',
     `${env.next.config}.dns.nextdns.io`,
-].join('|'));
+];
 
 (async () => {
     try {
@@ -51,7 +52,7 @@ const exclude = new RegExp([
                         if (
                             lists.length === 0
                             && !suspicious.has(name)
-                            && !exclude.test(name)
+                            && !exclude.some(elem => name.includes(elem))
                         ) {
                             const {Answer} = await request.doh({domain: name, resolver: `https://dns.nextdns.io/${env.next.config}/${env.next.checker}`});
 
