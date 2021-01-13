@@ -19,7 +19,7 @@ const searchList = [
     'marketing', 'metric',
     'pixel',
     'rum',
-    'sentry', 'stats', 'statis',
+    'stats', 'statis',
     'telem',
     'track',
 ];
