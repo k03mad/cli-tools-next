@@ -27,10 +27,10 @@ const searchList = [
 const exclude = [
     '-rum.cdnvideo.ru',
     '.cdn.ampproject.org',
+    '.nextdns.io',
     'dnsotls-ds.metric.gstatic.com',
     'forum.',
     'login.',
-    `${env.next.config}.dns.nextdns.io`,
 ];
 
 (async () => {
