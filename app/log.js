@@ -6,6 +6,15 @@ const env = require('../env');
 const {green} = require('chalk');
 const {print, next, hosts} = require('utils-mad');
 
+const exclude = {
+    '+': [
+        '-dnsotls-ds.metric.gstatic.com',
+        '.googleapis.com',
+        '.googlevideo.com',
+    ],
+    '-': [],
+};
+
 (async () => {
     try {
         let [domains, sort = 'on', pages = 100] = env.args;
@@ -13,16 +22,9 @@ const {print, next, hosts} = require('utils-mad');
         if (domains !== '-' && domains !== '+') {
             console.log(`Args: ${green('{type (-|+)} {sort (on|off = on)} {pages = 100}')}`);
         } else {
-            const logDomains = domainsSet => console.log(
-                sort === 'on'
-                    ? hosts.comment(hosts.sort(new Set(domainsSet))).join('\n')
-                    : [...new Set(domainsSet)].reverse().join('\n'),
-            );
-
             pages = Number(pages);
 
-            const allowed = [];
-            const blocked = [];
+            const domainsList = [];
 
             let lastTime;
 
@@ -48,17 +50,24 @@ const {print, next, hosts} = require('utils-mad');
                 }
 
                 logs.forEach(({status, name, deviceName}) => {
-                    if (deviceName !== env.next.checker) {
-                        status === 2
-                            ? blocked[method](name)
-                            : allowed[method](name);
+                    if (
+                        deviceName !== env.next.checker
+                        && !exclude[domains].some(elem => name.includes(elem))
+                        // eslint-disable-next-line no-mixed-operators
+                        && (domains === '-' && status === 2 || domains === '+' && status !== 2)
+                    ) {
+                        domainsList[method](name);
                     }
                 });
 
                 lastTime = logs[logs.length - 1].timestamp;
             }
 
-            logDomains(domains === '+' ? allowed : blocked);
+            console.log(
+                sort === 'on'
+                    ? hosts.comment(hosts.sort(new Set(domainsList))).join('\n')
+                    : [...new Set(domainsList)].reverse().join('\n'),
+            );
         }
     } catch (err) {
         print.ex(err, {full: true, exit: true});
