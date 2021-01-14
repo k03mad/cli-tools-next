@@ -23,7 +23,7 @@ const prepareAnswer = (domain, answer) => answer
         .map(elem => elem.data)
         .sort()
         .pop())}`
-    : `— ${domain} ${dim('no answer')}`;
+    : `— ${domain} ${dim('# NO ANSWER #')}`;
 
 const logRecords = (arr, name) => {
     if (arr.length > 0) {
@@ -96,7 +96,7 @@ const logRecords = (arr, name) => {
                     const lastDomainLog = logs.find(elem => elem.name === domain);
 
                     if (lastDomainLog?.lists.length > 0) {
-                        foundInLists.push(`— ${domain} ${dim(lastDomainLog.lists.join(', '))}`);
+                        foundInLists.push(`— ${domain}\n${dim(lastDomainLog.lists.sort().join('\n'))}`);
                         lastDomainLog.lists.forEach(elem => {
                             object.count(listsStat, elem);
                         });
