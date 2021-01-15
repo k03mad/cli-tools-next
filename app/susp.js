@@ -6,15 +6,16 @@ const env = require('../env');
 const pMap = require('p-map');
 const {next, request, print, hosts} = require('utils-mad');
 
-const concurrency = 4;
-const pages = 5;
+const concurrency = 5;
+const pages = 10;
 
 const searchList = [
     'ad.', '.ad', '-ad', 'ad-',
     'ads', 'adim', 'adv', 'adx',
     'affil', 'analy',
     'banner', 'beacon',
-    'counter',
+    'count',
+    'event',
     'log', 'logs',
     'marketing', 'metric',
     'pixel',
@@ -26,29 +27,38 @@ const searchList = [
 
 const exclude = [
     '-rum.cdnvideo.ru',
+    '.blog',
     '.cdn.ampproject.org',
     '.nextdns.io',
+    'account.',
+    'accounts.',
+    'blog.',
+    'catalog.',
     'dnsotls-ds.metric.gstatic.com',
+    'download.',
     'forum.',
+    'forums.',
     'login.',
+    'static.',
+    'upload.',
 ];
 
 (async () => {
     try {
         const suspicious = new Set();
-        const lastTime = {};
 
         await pMap(searchList, async search => {
-            for (let i = 1; i <= pages; i++) {
+            let timestamp = '';
+            let hasMore = true;
 
-                if (lastTime[search] !== null) {
-                    const {logs} = await next.query({
-                        before: lastTime[search] || '',
+            for (let i = 1; i <= pages; i++) {
+                if (hasMore) {
+                    const data = await next.query({
                         path: 'logs',
-                        searchParams: {search, simple: 1, lng: 'en'},
+                        searchParams: {search, simple: 1, lng: 'en', before: timestamp},
                     });
 
-                    for (const {lists, name} of logs) {
+                    for (const {lists, name} of data.logs) {
                         if (
                             lists.length === 0
                             && !suspicious.has(name)
@@ -62,9 +72,9 @@ const exclude = [
                         }
                     }
 
-                    lastTime[search] = logs[logs.length - 1]?.timestamp || null;
+                    ({timestamp} = data.logs[data.logs.length - 1] || '');
+                    ({hasMore} = data);
                 }
-
             }
         }, {concurrency});
 
