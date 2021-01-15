@@ -26,7 +26,7 @@ const searchList = [
 ];
 
 const exclude = [
-    '-rum.cdnvideo.ru',
+    '-rum.cdnv',
     '.blog',
     '.cdn.ampproject.org',
     '.nextdns.io',
