@@ -17,13 +17,13 @@ const lists = {
     '+': 'allowlist',
 };
 
-const prepareAnswer = (domain, answer) => answer
-    ? `— ${domain} ${dim(answer
+const prepareAnswer = (domain, answer) => `— ${domain} ${dim(answer
+    ? answer
         .filter(elem => elem.data.match(/(\d{1,3}\.){3}\d{1,3}/))
         .map(elem => elem.data)
         .sort()
-        .pop())}`
-    : `— ${domain} ${dim('# NO ANSWER #')}`;
+        .pop()
+    : '# NO ANSWER #')}`;
 
 const logRecords = (arr, name) => {
     if (arr.length > 0) {
@@ -82,17 +82,32 @@ const logRecords = (arr, name) => {
 
                 await promise.delay(pause);
 
-                // get last requests logs
-                const {logs} = await next.query({
-                    path: 'logs',
-                    searchParams: {simple: 1, lng: 'en'},
-                });
-
                 // save allow/block reasons
                 const foundInLists = [];
                 const listsStat = {};
 
-                domains.forEach(domain => {
+                const devices = await next.query({
+                    path: 'analytics/top_devices',
+                    searchParams: {
+                        from: '-30d',
+                        timezoneOffset: '-180',
+                        selector: true,
+                    },
+                });
+
+                const {id} = devices.find(elem => elem.name === env.next.checker);
+
+                await pMap(domains, async domain => {
+                    const {logs} = await next.query({
+                        path: 'logs',
+                        searchParams: {
+                            device: id,
+                            search: domain,
+                            simple: 1,
+                            lng: 'en',
+                        },
+                    });
+
                     const lastDomainLog = logs.find(elem => elem.name === domain);
 
                     if (lastDomainLog?.lists.length > 0) {
@@ -101,9 +116,9 @@ const logRecords = (arr, name) => {
                             object.count(listsStat, elem);
                         });
                     }
-                });
+                }, {concurrency});
 
-                logRecords(foundInLists, 'reasons');
+                logRecords(foundInLists.sort(), 'reasons');
                 logRecords(
                     Object
                         .entries(listsStat)

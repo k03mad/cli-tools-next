@@ -17,11 +17,9 @@ const exclude = {
 
 (async () => {
     try {
-        let [domains, sort = 'on', pages = 100] = env.args;
+        let [list, sort = 'on', pages = 100] = env.args;
 
-        if (domains !== '-' && domains !== '+') {
-            console.log(`Args: ${green('{type (-|+)} {sort (on|off = on)} {pages = 100}')}`);
-        } else {
+        if (Object.keys(exclude).includes(list)) {
             pages = Number(pages);
 
             const domainsList = [];
@@ -52,9 +50,9 @@ const exclude = {
                 logs.forEach(({status, name, deviceName}) => {
                     if (
                         deviceName !== env.next.checker
-                        && !exclude[domains].some(elem => name.includes(elem))
+                        && !exclude[list].some(elem => name.includes(elem))
                         // eslint-disable-next-line no-mixed-operators
-                        && (domains === '-' && status === 2 || domains === '+' && status !== 2)
+                        && (list === '-' && status === 2 || list === '+' && status !== 2)
                     ) {
                         domainsList[method](name);
                     }
@@ -68,6 +66,8 @@ const exclude = {
                     ? hosts.comment(hosts.sort(new Set(domainsList))).join('\n')
                     : [...new Set(domainsList)].reverse().join('\n'),
             );
+        } else {
+            console.log(`Args: ${green('{type (-|+)} {sort (on|off = on)} {pages = 100}')}`);
         }
     } catch (err) {
         print.ex(err, {full: true, exit: true});
