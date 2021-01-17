@@ -3,6 +3,7 @@
 'use strict';
 
 const env = require('../env');
+const path = require('path');
 const pMap = require('p-map');
 const {next, request, print, hosts} = require('utils-mad');
 const {promises: fs} = require('fs');
@@ -15,10 +16,10 @@ const pages = 10;
         const suspicious = new Set();
 
         const [searchList, excludeList] = await Promise.all([
-            './app/susp/search.list',
-            './app/susp/exclude.list',
-        ].map(async path => {
-            const list = await fs.readFile(path, {encoding: 'utf-8'});
+            'search.list',
+            'exclude.list',
+        ].map(async name => {
+            const list = await fs.readFile(path.join(__dirname, 'susp', name), {encoding: 'utf-8'});
             return list.split(/\s+/).filter(Boolean);
         }));
 
