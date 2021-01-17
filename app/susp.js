@@ -5,47 +5,27 @@
 const env = require('../env');
 const pMap = require('p-map');
 const {next, request, print, hosts} = require('utils-mad');
+const {promises: fs} = require('fs');
 
 const concurrency = 5;
 const pages = 10;
 
-const searchList = [
-    'ad.', '.ad', '-ad', 'ad-',
-    'ads', 'adim', 'adv', 'adx',
-    'affil', 'analy',
-    'banner', 'beacon',
-    'count',
-    'event',
-    'log', 'logs',
-    'marketing', 'metric',
-    'pixel',
-    'rum',
-    'stats', 'statis',
-    'telem',
-    'track',
-];
-
-const exclude = [
-    '-rum.cdnv',
-    '.blog',
-    '.cdn.ampproject.org',
-    '.nextdns.io',
-    'account.',
-    'accounts.',
-    'blog.',
-    'catalog.',
-    'dnsotls-ds.metric.gstatic.com',
-    'download.',
-    'forum.',
-    'forums.',
-    'login.',
-    'static.',
-    'upload.',
-];
-
 (async () => {
     try {
         const suspicious = new Set();
+
+        const [searchList, excludeList] = await Promise.all([
+            './app/susp/search.list',
+            './app/susp/exclude.list',
+        ].map(async path => {
+            const list = await fs.readFile(path, {encoding: 'utf-8'});
+            return list.split(/\s+/).filter(Boolean);
+        }));
+
+        const domainsInLists = await Promise.all([
+            next.list({path: 'denylist'}),
+            next.list({path: 'allowlist'}),
+        ]);
 
         await pMap(searchList, async search => {
             let timestamp = '';
@@ -62,11 +42,15 @@ const exclude = [
                         if (
                             lists.length === 0
                             && !suspicious.has(name)
-                            && !exclude.some(elem => name.includes(elem))
+                            && !excludeList.some(elem => name.includes(elem))
+                            && !domainsInLists.flat().includes(name)
                         ) {
-                            const {Answer} = await request.doh({domain: name, resolver: `https://dns.nextdns.io/${env.next.config}/${env.next.checker}`});
+                            const {Answer} = await request.doh({
+                                domain: name,
+                                resolver: `https://dns.nextdns.io/${env.next.config}/${env.next.checker}`,
+                            });
 
-                            if (Answer && !Answer?.some(elem => elem.data === '0.0.0.0')) {
+                            if (Answer && !Answer.some(elem => elem.data === '0.0.0.0')) {
                                 suspicious.add(name);
                             }
                         }
