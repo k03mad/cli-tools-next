@@ -20,7 +20,7 @@ const pages = 10;
             'search.list',
             'exclude.list',
         ].map(async name => {
-            const list = await fs.readFile(path.join(__dirname, 'susp', name), {encoding: 'utf-8'});
+            const list = await fs.readFile(path.join(__dirname, 'helpers', name), {encoding: 'utf-8'});
             return list.split(/\s+/).filter(Boolean);
         }));
 
