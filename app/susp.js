@@ -5,6 +5,7 @@
 const env = require('../env');
 const path = require('path');
 const pMap = require('p-map');
+const {lists} = require('./helpers/consts');
 const {next, request, print, hosts} = require('utils-mad');
 const {promises: fs} = require('fs');
 
@@ -23,10 +24,9 @@ const pages = 10;
             return list.split(/\s+/).filter(Boolean);
         }));
 
-        const domainsInLists = await Promise.all([
-            next.list({path: 'denylist'}),
-            next.list({path: 'allowlist'}),
-        ]);
+        const domainsInLists = await Promise.all(
+            Object.values(lists).map(list => next.list({path: list})),
+        );
 
         await pMap(searchList, async search => {
             let timestamp = '';
@@ -39,9 +39,9 @@ const pages = 10;
                         searchParams: {search, simple: 1, lng: 'en', before: timestamp},
                     });
 
-                    for (const {lists, name} of data.logs) {
+                    for (const {lists: logLists, name} of data.logs) {
                         if (
-                            lists.length === 0
+                            logLists.length === 0
                             && !suspicious.has(name)
                             && !excludeList.some(elem => name.includes(elem))
                             && !domainsInLists.flat().includes(name)
