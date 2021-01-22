@@ -20,22 +20,22 @@
     "chalk": "4.1.0",
     "hexyjs": "2.1.4",
     "p-map": "4.0.0",
-    "utils-mad": "10.2.0",
+    "utils-mad": "10.3.0",
     "yargs": "16.2.0"
   },
   "devDependencies": {
     "eslint": "7.18.0",
-    "eslint-config-k03mad": "6.0.4",
-    "eslint-plugin-jsdoc": "31.0.7",
+    "eslint-config-k03mad": "6.0.5",
+    "eslint-plugin-jsdoc": "31.0.8",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-sort-requires": "2.1.0",
-    "eslint-plugin-unicorn": "26.0.1",
+    "eslint-plugin-unicorn": "27.0.0",
     "husky": "4.3.8"
   },
   "scripts": {
     "lint": "eslint ./ --report-unused-disable-directives --format=codeframe --ignore-pattern='!.*'",
-    "setup": "npm i"
+    "setup": "pnpm i"
   },
   "license": "Unlicense"
 }
