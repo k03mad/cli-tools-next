@@ -14,6 +14,7 @@ const pages = 10;
 
 (async () => {
     try {
+        const searchArgs = env.args;
         const suspicious = new Set();
 
         const [searchList, excludeList] = await Promise.all([
@@ -28,7 +29,7 @@ const pages = 10;
             Object.values(lists).map(list => next.list({path: list})),
         );
 
-        await pMap(searchList, async search => {
+        await pMap(searchArgs.length > 0 ? searchArgs : searchList, async search => {
             let timestamp = '';
             let hasMore = true;
 
