@@ -35,7 +35,7 @@
   },
   "scripts": {
     "lint": "eslint ./ --report-unused-disable-directives --format=codeframe --ignore-pattern='!.*'",
-    "setup": "pnpm i"
+    "setup": "npm i"
   },
   "license": "Unlicense"
 }
