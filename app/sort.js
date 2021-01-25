@@ -6,10 +6,8 @@ const hexyjs = require('hexyjs');
 const pMap = require('p-map');
 const {args} = require('../env');
 const {green, red, dim} = require('chalk');
-const {lists} = require('./helpers/consts');
+const {lists, concurrency} = require('./helpers/consts');
 const {next, hosts, promise, print} = require('utils-mad');
-
-const concurrency = 5;
 
 (async () => {
     try {

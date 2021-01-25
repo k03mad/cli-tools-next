@@ -6,12 +6,11 @@ const env = require('../env');
 const path = require('path');
 const pMap = require('p-map');
 const {green} = require('chalk');
-const {lists} = require('./helpers/consts');
+const {lists, concurrency} = require('./helpers/consts');
 const {next, request, print, hosts} = require('utils-mad');
 const {promises: fs} = require('fs');
 
-const concurrency = 10;
-const pages = 10;
+const pages = 20;
 
 (async () => {
     try {

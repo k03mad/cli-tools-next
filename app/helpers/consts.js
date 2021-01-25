@@ -5,4 +5,5 @@ module.exports = {
         '-': 'denylist',
         '+': 'allowlist',
     },
+    concurrency: 10,
 };

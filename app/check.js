@@ -7,10 +7,9 @@ const hexyjs = require('hexyjs');
 const pMap = require('p-map');
 const {args} = require('../env');
 const {cyan, dim, yellow, green} = require('chalk');
-const {lists} = require('./helpers/consts');
+const {lists, concurrency} = require('./helpers/consts');
 const {next, request, promise, print, object} = require('utils-mad');
 
-const concurrency = 4;
 const pause = 5000;
 
 const prepareAnswer = (domain, answer) => `— ${domain} ${dim(answer
