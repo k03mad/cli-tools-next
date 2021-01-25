@@ -10,7 +10,7 @@ const {lists, concurrency} = require('./helpers/consts');
 const {next, request, print, hosts} = require('utils-mad');
 const {promises: fs} = require('fs');
 
-const pages = 20;
+const pages = 10;
 
 (async () => {
     try {
