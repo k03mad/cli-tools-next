@@ -5,6 +5,7 @@
 const env = require('../env');
 const path = require('path');
 const pMap = require('p-map');
+const {green} = require('chalk');
 const {lists} = require('./helpers/consts');
 const {next, request, print, hosts} = require('utils-mad');
 const {promises: fs} = require('fs');
@@ -14,6 +15,7 @@ const pages = 10;
 
 (async () => {
     try {
+        const searchArgs = env.args;
         const suspicious = new Set();
 
         const [searchList, excludeList] = await Promise.all([
@@ -35,7 +37,7 @@ const pages = 10;
             Object.values(lists).map(list => next.list({path: list})),
         );
 
-        await pMap(searchList, async search => {
+        await pMap(searchArgs.length > 0 ? searchArgs : searchList, async search => {
             let timestamp = '';
             let hasMore = true;
 
@@ -58,7 +60,7 @@ const pages = 10;
                                 resolver: `https://dns.nextdns.io/${env.next.config}/${env.next.checker}`,
                             });
 
-                            if (Answer && !Answer.some(elem => elem.data === '0.0.0.0')) {
+                            if (!Answer?.some(elem => elem.data === '0.0.0.0')) {
                                 suspicious.add(name);
                             }
                         }
@@ -70,7 +72,10 @@ const pages = 10;
             }
         }, {concurrency});
 
-        console.log(hosts.comment(hosts.sort(suspicious)).join('\n'));
+        console.log(suspicious.size > 0
+            ? hosts.comment(hosts.sort(suspicious)).join('\n')
+            : green('Suspicious domains not found'),
+        );
     } catch (err) {
         print.ex(err, {full: true, exit: true});
     }
