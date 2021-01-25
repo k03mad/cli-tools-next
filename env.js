@@ -13,4 +13,5 @@ module.exports = {
     },
 
     pwd: process.env.PWD,
+    repo: 'https://raw.githubusercontent.com/k03mad/cli-tools-next/master',
 };

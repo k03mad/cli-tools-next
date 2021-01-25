@@ -25,7 +25,7 @@ const pages = 10;
             if (env.pwd?.endsWith('cli-tools-next')) {
                 list = await fs.readFile(path.join(__dirname, 'helpers', name), {encoding: 'utf-8'});
             } else {
-                ({body: list} = await request.got(`https://raw.githubusercontent.com/k03mad/cli-tools-next/master/app/helpers/${name}`));
+                ({body: list} = await request.got(`${env.repo}/app/helpers/${name}`));
             }
 
             return list.split(/\s+/).filter(Boolean);
