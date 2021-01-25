@@ -9,7 +9,7 @@ const {lists} = require('./helpers/consts');
 const {next, request, print, hosts} = require('utils-mad');
 const {promises: fs} = require('fs');
 
-const concurrency = 5;
+const concurrency = 10;
 const pages = 10;
 
 (async () => {
@@ -20,7 +20,14 @@ const pages = 10;
             'search.list',
             'exclude.list',
         ].map(async name => {
-            const list = await fs.readFile(path.join(__dirname, 'helpers', name), {encoding: 'utf-8'});
+            let list;
+
+            if (env.pwd?.endsWith('cli-tools-next')) {
+                list = await fs.readFile(path.join(__dirname, 'helpers', name), {encoding: 'utf-8'});
+            } else {
+                ({body: list} = await request.got(`https://raw.githubusercontent.com/k03mad/cli-tools-next/master/app/helpers/${name}`));
+            }
+
             return list.split(/\s+/).filter(Boolean);
         }));
 

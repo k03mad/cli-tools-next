@@ -11,4 +11,6 @@ module.exports = {
         config: process.env.NEXT_DNS_CONFIG,
         checker: 'Mad-Checker',
     },
+
+    pwd: process.env.PWD,
 };
