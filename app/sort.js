@@ -4,53 +4,72 @@
 
 const hexyjs = require('hexyjs');
 const pMap = require('p-map');
-const {args} = require('../env');
-const {green, red, dim} = require('chalk');
-const {lists, concurrency} = require('./helpers/consts');
-const {next, hosts, promise, print} = require('utils-mad');
+const {green, dim, cyan, red, blue} = require('chalk');
+const {lists, concurrency, timeout} = require('./helpers/consts');
+const {next, hosts, promise, print, array} = require('utils-mad');
+
+const query = ({method, list, domain}) => next.query({
+    method,
+    path: `${list}/hex:${hexyjs.strToHex(domain)}`,
+});
 
 (async () => {
-    try {
-        const [list] = args;
+    const results = await Promise.allSettled(Object.values(lists || {}).map(async list => {
+        const currentDomains = await next.list({path: list});
 
-        if (Object.keys(lists).includes(list)) {
-            const listType = lists[list];
-            const currentDomains = await next.list({path: listType});
+        console.log([
+            '',
+            `${dim(cyan('before'))} ${green(list)}: ${currentDomains.length} domains\n`,
+            dim(currentDomains.join('\n')),
+        ].join('\n'));
 
-            await pMap(currentDomains, domain => next.query({
-                method: 'DELETE',
-                path: `${listType}/hex:${hexyjs.strToHex(domain)}`,
-            }), {concurrency});
+        await pMap(currentDomains, domain => query({
+            method: 'DELETE', list, domain,
+        }), {concurrency});
 
-            console.log([
-                `${green('Before sort:')} ${currentDomains.length} domains in ${listType}\n`,
-                dim(currentDomains.join('\n')),
-                '',
-            ].join('\n'));
+        const sortedReversed = hosts.sort(new Set(currentDomains)).reverse();
 
-            const sortedReversed = hosts.sort(new Set(currentDomains)).reverse();
+        for (const domain of sortedReversed) {
+            await promise.delay(timeout);
 
-            for (const domain of sortedReversed) {
-                await promise.delay();
-                await next.query({
-                    method: 'PUT',
-                    path: `${listType}/hex:${hexyjs.strToHex(domain)}`,
-                });
+            try {
+                await query({method: 'PUT', list, domain});
+            } catch {
+                await promise.delay(timeout * 3);
+
+                try {
+                    await query({method: 'PUT', list, domain});
+                } catch (err) {
+                    print.ex(err, {before: `Cannot add "${domain}" to "${list}"`});
+                }
             }
-
-            const afterDomains = await next.list({path: listType});
-
-            console.log([
-                `${green('After sort:')} ${afterDomains.length} domains in ${listType}\n`,
-                dim(afterDomains.join('\n')),
-                currentDomains.length === afterDomains.length
-                    ? '' : red('\n\nSOMETHING GOES WRONG\nDomains length doesn\'t eql after sort'),
-            ].join('\n').trim());
-        } else {
-            console.log(`Args: ${green('{type (-|+)}')}`);
         }
 
-    } catch (err) {
-        print.ex(err, {full: true, exit: true});
+        await promise.delay(timeout);
+        const afterDomains = await next.list({path: list});
+
+        console.log([
+            '',
+            `${dim(cyan('after'))} ${green(list)}: ${afterDomains.length} domains\n`,
+            dim(afterDomains.join('\n')),
+        ].join('\n'));
+
+        if (currentDomains.length !== afterDomains.length) {
+            throw new Error([
+                red(`${list.toUpperCase()}: different domains count after sort`),
+                `Before: ${currentDomains.length}`,
+                `After: ${afterDomains.length})`,
+                `Diff: ${blue(array.diff(currentDomains, afterDomains).join(', '))}`,
+            ].join('\n'));
+        }
+    }));
+
+    const rejected = results
+        .filter(elem => elem.status === 'rejected')
+        .map(elem => elem.reason)
+        .join('\n');
+
+    if (rejected) {
+        print.ex(rejected, {full: true, exit: true});
     }
 })();

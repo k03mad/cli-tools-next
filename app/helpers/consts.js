@@ -6,4 +6,5 @@ module.exports = {
         '+': 'allowlist',
     },
     concurrency: 10,
+    timeout: 1000,
 };
