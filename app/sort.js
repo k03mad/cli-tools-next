@@ -30,12 +30,12 @@ const query = ({method, list, domain}) => next.query({
         const sortedReversed = hosts.sort(new Set(currentDomains)).reverse();
 
         for (const domain of sortedReversed) {
-            await promise.delay(timeout);
+            await promise.delay(timeout.put);
 
             try {
                 await query({method: 'PUT', list, domain});
             } catch {
-                await promise.delay(timeout * 3);
+                await promise.delay(timeout.pause);
 
                 try {
                     await query({method: 'PUT', list, domain});
@@ -45,7 +45,7 @@ const query = ({method, list, domain}) => next.query({
             }
         }
 
-        await promise.delay(timeout);
+        await promise.delay(timeout.pause);
         const afterDomains = await next.list({path: list});
 
         console.log([

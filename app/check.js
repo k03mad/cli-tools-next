@@ -7,10 +7,8 @@ const hexyjs = require('hexyjs');
 const pMap = require('p-map');
 const {args} = require('../env');
 const {cyan, dim, yellow, green} = require('chalk');
-const {lists, concurrency} = require('./helpers/consts');
+const {lists, concurrency, timeout} = require('./helpers/consts');
 const {next, request, promise, print, object} = require('utils-mad');
-
-const pause = 5000;
 
 const prepareAnswer = (domain, answer) => `— ${domain} ${dim(answer
     ? answer
@@ -44,7 +42,7 @@ const logRecords = (arr, name) => {
                     json: {active: false},
                 }), {concurrency});
 
-                await promise.delay(pause);
+                await promise.delay(timeout.pause);
 
                 // get dns records
                 const cloudflare = [];
@@ -75,7 +73,7 @@ const logRecords = (arr, name) => {
                 logRecords(nextdns, 'nextdns');
                 logRecords(common, 'common');
 
-                await promise.delay(pause);
+                await promise.delay(timeout.pause);
 
                 // save allow/block reasons
                 const foundInLists = [];
