@@ -20,6 +20,7 @@
     "chalk": "4.1.0",
     "hexyjs": "2.1.4",
     "p-map": "4.0.0",
+    "update-notifier": "5.0.1",
     "utils-mad": "10.4.1",
     "yargs": "16.2.0"
   },

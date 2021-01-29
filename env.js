@@ -1,6 +1,10 @@
 'use strict';
 
+const pkg = require('./package.json');
+const updateNotifier = require('update-notifier');
 const {argv} = require('yargs');
+
+updateNotifier({pkg}).notify();
 
 const args = argv._;
 
