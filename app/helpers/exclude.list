@@ -1,6 +1,5 @@
 -dnsotls-ds.metric.gstatic.com
 -rum.cdnvideo.ru
--apple.com.akadns.net
 .cdn.ampproject.org
 .github.io
 .inf.miui.com
@@ -12,10 +11,7 @@
 .dvanadva.ru
 .tourister.ru
 .chess.com
-.push.apple.com
 .googleapis.com
-push.yandex
-push-me.my.com
 account
 adaway
 adblock
@@ -26,7 +22,6 @@ adtidy
 advego
 advice
 adwhj
-codepush
 bad
 benawad
 blog
