@@ -1,6 +1,9 @@
 -dnsotls-ds.metric.gstatic.com
 -rum.cdnvideo.ru
 -livetracker
+-eqiad.wikimedia.org
+-iad.wikimedia.org
+-adiu.amap.com
 
 .adt.ru
 .cdn.ampproject.org
@@ -15,6 +18,7 @@
 .tourister.ru
 .wildberries.ru
 .xboxlive.com
+.eqiad.wikimedia.org
 
 trackgo.ru
 
@@ -32,9 +36,12 @@ bad
 benawad
 blog
 cadsoft
+cassad
 catalog
+chad
 cookpad
 dialog
+discount
 eventbrite
 fonstats
 forum
@@ -43,22 +50,26 @@ kulturolog
 lead
 load
 login
+logistic
 logitech
 logo
 mad
 onthemapmarketing
 pixelfederation
+posad
 read
 road
 rumble
 rumer
 rutracker
+sferum
 sklad
 technolog
 telematics
 threads
-traffic
+traffi
 tripadvisor
 trump
 umsad
 vologda
+vladimir
