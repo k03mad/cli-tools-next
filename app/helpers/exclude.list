@@ -4,6 +4,7 @@
 -eqiad.wikimedia.org
 -iad.wikimedia.org
 -adiu.amap.com
+-eqiad.frdev.wikimedia.org
 
 .adt.ru
 .cdn.ampproject.org
@@ -42,6 +43,7 @@ chad
 cookpad
 dialog
 discount
+etherpad
 eventbrite
 fonstats
 forum
@@ -54,6 +56,7 @@ logistic
 logitech
 logo
 mad
+mailcount
 onthemapmarketing
 pixelfederation
 posad
