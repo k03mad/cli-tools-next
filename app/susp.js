@@ -59,7 +59,7 @@ const pages = 10;
                                 resolver: `https://dns.nextdns.io/${env.next.config}/${env.next.checker}`,
                             });
 
-                            if (!Answer?.some(elem => elem.data === '0.0.0.0')) {
+                            if (Answer && !Answer.some(elem => elem.data === '0.0.0.0')) {
                                 suspicious.add(name);
                             }
                         }
