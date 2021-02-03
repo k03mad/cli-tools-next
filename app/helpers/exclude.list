@@ -1,15 +1,16 @@
+-adiu.amap.com
 -dnsotls-ds.metric.gstatic.com
--rum.cdnvideo.ru
--livetracker
+-eqiad.frdev.wikimedia.org
 -eqiad.wikimedia.org
 -iad.wikimedia.org
--adiu.amap.com
--eqiad.frdev.wikimedia.org
+-livetracker
+-rum.cdnvideo.ru
 
 .adt.ru
 .cdn.ampproject.org
 .chess.com
 .dvanadva.ru
+.eqiad.wikimedia.org
 .events.pfc-cska.com
 .github.io
 .googleapis.com
@@ -19,8 +20,8 @@
 .tourister.ru
 .wildberries.ru
 .xboxlive.com
-.eqiad.wikimedia.org
 
+tracker.rutor.is
 trackgo.ru
 
 account
@@ -33,6 +34,7 @@ adtidy
 advego
 advice
 adwhj
+apix
 bad
 benawad
 blog
@@ -58,6 +60,7 @@ logo
 mad
 mailcount
 onthemapmarketing
+phraseolog
 pixelfederation
 posad
 read
@@ -74,5 +77,5 @@ traffi
 tripadvisor
 trump
 umsad
-vologda
 vladimir
+vologda
