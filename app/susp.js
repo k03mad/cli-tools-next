@@ -7,7 +7,7 @@ const path = require('path');
 const pMap = require('p-map');
 const {green} = require('chalk');
 const {lists, concurrency} = require('./helpers/consts');
-const {next, request, print, hosts} = require('utils-mad');
+const {next, request, print, hosts} = require('@k03mad/utils');
 const {promises: fs} = require('fs');
 
 const pages = 10;

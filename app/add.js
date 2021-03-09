@@ -6,7 +6,7 @@ const hexyjs = require('hexyjs');
 const {args} = require('../env');
 const {green, yellow, magenta} = require('chalk');
 const {lists} = require('./helpers/consts');
-const {next, print, request} = require('utils-mad');
+const {next, print, request} = require('@k03mad/utils');
 
 (async () => {
     try {

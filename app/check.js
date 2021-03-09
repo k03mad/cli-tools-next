@@ -8,7 +8,7 @@ const pMap = require('p-map');
 const {args} = require('../env');
 const {cyan, dim, yellow, green} = require('chalk');
 const {lists, concurrency, timeout} = require('./helpers/consts');
-const {next, request, promise, print, object} = require('utils-mad');
+const {next, request, promise, print, object} = require('@k03mad/utils');
 
 const prepareAnswer = (domain, answer) => `— ${domain} ${dim(answer
     ? answer

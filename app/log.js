@@ -4,7 +4,7 @@
 
 const env = require('../env');
 const {green} = require('chalk');
-const {print, next, hosts} = require('utils-mad');
+const {print, next, hosts} = require('@k03mad/utils');
 
 const exclude = {
     '+': [

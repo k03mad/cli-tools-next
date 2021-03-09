@@ -6,6 +6,7 @@
     "Kirill Molchanov <k03.mad@gmail.com"
   ],
   "repository": "k03mad/cli-tools-next",
+  "license": "MIT",
   "bin": {
     "mad_next_add": "app/add.js",
     "mad_next_check": "app/check.js",
@@ -17,16 +18,16 @@
     "node": ">=14"
   },
   "dependencies": {
+    "@k03mad/utils": "14.0.0",
     "chalk": "4.1.0",
     "hexyjs": "2.1.4",
     "p-map": "4.0.0",
     "update-notifier": "5.1.0",
-    "utils-mad": "13.0.4",
     "yargs": "16.2.0"
   },
   "devDependencies": {
-    "eslint": "7.20.0",
-    "eslint-config-k03mad": "7.0.3",
+    "@k03mad/eslint-config": "8.0.0",
+    "eslint": "7.21.0",
     "eslint-plugin-jsdoc": "32.2.0",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "4.3.1",
@@ -37,6 +38,5 @@
   "scripts": {
     "lint": "eslint ./ --report-unused-disable-directives --format=codeframe --ignore-pattern='!.*'",
     "setup": "npm i"
-  },
-  "license": "Unlicense"
+  }
 }

@@ -6,7 +6,7 @@ const hexyjs = require('hexyjs');
 const pMap = require('p-map');
 const {green, dim, cyan, red, blue} = require('chalk');
 const {lists, concurrency, timeout} = require('./helpers/consts');
-const {next, hosts, promise, print, array} = require('utils-mad');
+const {next, hosts, promise, print, array} = require('@k03mad/utils');
 
 const query = ({method, list, domain}) => next.query({
     method,
