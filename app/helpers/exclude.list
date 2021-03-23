@@ -1,4 +1,6 @@
 -dnsotls-ds.metric.gstatic.com
+-pa.googleapis.com
+-testing.ott.yandex
 .cdn.ampproject.org
 .pixelfederation.com
 .wildberries.ru
@@ -26,6 +28,8 @@ mad
 lad
 quad
 pad
+pixel-art
 read
 road
 vladim
+vzglyad
