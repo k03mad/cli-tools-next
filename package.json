@@ -18,7 +18,7 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@k03mad/utils": "14.0.1",
+    "@k03mad/utils": "14.1.0",
     "chalk": "4.1.0",
     "hexyjs": "2.1.4",
     "p-map": "4.0.0",
