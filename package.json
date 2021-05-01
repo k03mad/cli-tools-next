@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@k03mad/utils": "14.1.0",
-    "chalk": "4.1.0",
+    "chalk": "4.1.1",
     "hexyjs": "2.1.4",
     "p-map": "4.0.0",
     "update-notifier": "5.1.0",
