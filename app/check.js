@@ -5,7 +5,6 @@
 const env = require('../env');
 const hexyjs = require('hexyjs');
 const pMap = require('p-map');
-const {args} = require('../env');
 const {cyan, dim, yellow, green} = require('chalk');
 const {lists, concurrency, timeout} = require('./helpers/consts');
 const {next, request, promise, print, object} = require('@k03mad/utils');
@@ -26,7 +25,7 @@ const logRecords = (arr, name) => {
 
 (async () => {
     try {
-        const [list] = args;
+        const [list] = env.args;
 
         if (Object.keys(lists).includes(list)) {
             const listType = lists[list];

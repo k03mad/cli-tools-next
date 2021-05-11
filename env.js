@@ -15,7 +15,4 @@ module.exports = {
         config: process.env.NEXT_DNS_CONFIG,
         checker: 'Mad-Checker',
     },
-
-    pwd: process.env.PWD,
-    repo: 'https://raw.githubusercontent.com/k03mad/cli-tools-next/master',
 };
