@@ -1,7 +1,7 @@
 {
   "name": "@k03mad/cli-tools-next",
   "description": "My CLI tools",
-  "version": "6.1.0",
+  "version": "6.2.0",
   "maintainers": [
     "Kirill Molchanov <k03.mad@gmail.com"
   ],
@@ -11,8 +11,7 @@
     "mad_next_add": "app/add.js",
     "mad_next_check": "app/check.js",
     "mad_next_log": "app/log.js",
-    "mad_next_sort": "app/sort.js",
-    "mad_next_susp": "app/susp.js"
+    "mad_next_sort": "app/sort.js"
   },
   "engines": {
     "node": ">=14"
