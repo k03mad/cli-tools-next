@@ -20,7 +20,7 @@
     "@k03mad/utils": "14.5.3",
     "chalk": "4.1.1",
     "hexyjs": "2.1.4",
-    "p-map": "4.0.0",
+    "p-map": "5.0.0",
     "update-notifier": "5.1.0",
     "yargs": "17.0.1"
   },
