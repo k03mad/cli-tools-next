@@ -7,7 +7,7 @@ module.exports = {
     },
     concurrency: 10,
     timeout: {
-        put: 1000,
+        put: 2000,
         pause: 5000,
     },
 };
