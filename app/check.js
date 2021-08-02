@@ -103,6 +103,13 @@ const logRecords = (arr, name) => {
                     const lastDomainLog = logs.find(elem => elem.name === domain);
 
                     if (lastDomainLog?.lists.length > 0) {
+                        if (
+                            listType === 'allowlist'
+                            && lastDomainLog.lists.includes('Affiliate & Tracking Links')
+                        ) {
+                            return;
+                        }
+
                         foundInLists.push(`— ${domain}\n${dim(lastDomainLog.lists.sort().join('\n'))}`);
                         lastDomainLog.lists.forEach(elem => {
                             object.count(listsStat, elem);
