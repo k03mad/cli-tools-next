@@ -63,7 +63,7 @@ const exclude = {
 
             console.log(
                 sort === 'on'
-                    ? hosts.comment(hosts.sort(new Set(domainsList))).join('\n')
+                    ? hosts.comment(hosts.sort(new Set(domainsList)))
                     : [...new Set(domainsList)].reverse().join('\n'),
             );
         } else {
