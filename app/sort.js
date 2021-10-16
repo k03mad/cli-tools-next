@@ -3,8 +3,9 @@
 'use strict';
 
 const hexyjs = require('hexyjs');
+const pMap = require('p-map');
 const {green, dim, cyan, red, blue} = require('chalk');
-const {lists, timeout} = require('./helpers/consts');
+const {lists, concurrency, timeout} = require('./helpers/consts');
 const {next, hosts, promise, print, array} = require('@k03mad/utils');
 
 const query = ({method, list, domain}) => next.query({
@@ -22,7 +23,9 @@ const query = ({method, list, domain}) => next.query({
             dim(currentDomains.join('\n')),
         ].join('\n'));
 
-        await Promise.all(currentDomains.map(domain => query({method: 'DELETE', list, domain})));
+        await pMap(currentDomains, domain => query({
+            method: 'DELETE', list, domain,
+        }), {concurrency});
 
         const sortedReversed = hosts.sort(new Set(currentDomains)).reverse();
 

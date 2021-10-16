@@ -5,6 +5,7 @@ module.exports = {
         '-': 'denylist',
         '+': 'allowlist',
     },
+    concurrency: 5,
     timeout: {
         put: 2000,
         pause: 5000,

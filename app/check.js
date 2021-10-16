@@ -4,8 +4,9 @@
 
 const env = require('../env');
 const hexyjs = require('hexyjs');
+const pMap = require('p-map');
 const {cyan, dim, yellow, green} = require('chalk');
-const {lists, timeout} = require('./helpers/consts');
+const {lists, concurrency, timeout} = require('./helpers/consts');
 const {next, request, promise, print, object} = require('@k03mad/utils');
 
 const prepareAnswer = (domain, answer) => `— ${domain} ${dim(answer
@@ -34,11 +35,11 @@ const logRecords = (arr, name) => {
 
             if (domains.length > 0) {
                 // disable personal filters
-                await Promise.all(domains.map(domain => next.query({
+                await pMap(domains, domain => next.query({
                     method: 'PATCH',
                     path: `${listType}/hex:${hexyjs.strToHex(domain)}`,
                     json: {active: false},
-                })));
+                }), {concurrency});
 
                 await promise.delay(timeout.pause);
 
@@ -47,13 +48,13 @@ const logRecords = (arr, name) => {
                 const nextdns = [];
                 const common = [];
 
-                const answers = await Promise.all(domains.map(async domain => {
+                const answers = await pMap(domains, async domain => {
                     const res = await Promise.all([
                         request.doh({domain}),
                         request.doh({domain, resolver: `https://dns.nextdns.io/${env.next.config}/${env.next.checker}`}),
                     ]);
                     return {domain, cloudflare: res[0].Answer, nextdns: res[1].Answer};
-                }));
+                }, {concurrency});
 
                 answers.forEach(answer => {
                     const preparedDef = prepareAnswer(answer.domain, answer.cloudflare);
@@ -88,7 +89,7 @@ const logRecords = (arr, name) => {
 
                 const {id} = devices.find(elem => elem.name === env.next.checker);
 
-                await Promise.all(domains.map(async domain => {
+                await pMap(domains, async domain => {
                     const {logs} = await next.query({
                         path: 'logs',
                         searchParams: {
@@ -114,7 +115,7 @@ const logRecords = (arr, name) => {
                             object.count(listsStat, elem);
                         });
                     }
-                }));
+                }, {concurrency});
 
                 logRecords(foundInLists.sort(), 'reasons');
                 logRecords(
@@ -126,11 +127,11 @@ const logRecords = (arr, name) => {
                 );
 
                 // reenable filters
-                await Promise.all(domains.map(domain => next.query({
+                await pMap(domains, domain => next.query({
                     method: 'PATCH',
                     path: `${listType}/hex:${hexyjs.strToHex(domain)}`,
                     json: {active: true},
-                })));
+                }), {concurrency});
             }
         } else {
             console.log(`Args: ${green('{type (-|+)}')}`);
