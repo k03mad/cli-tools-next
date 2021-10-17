@@ -17,10 +17,9 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@k03mad/utils": "17.2.0",
+    "@k03mad/utils": "17.4.0",
     "chalk": "4.1.2",
     "hexyjs": "2.1.4",
-    "p-map": "4.0.0",
     "update-notifier": "5.1.0",
     "yargs": "17.2.1"
   },
