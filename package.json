@@ -17,7 +17,7 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@k03mad/utils": "19.2.1",
+    "@k03mad/utils": "19.2.5",
     "chalk": "4.1.2",
     "hexyjs": "2.1.4",
     "update-notifier": "5.1.0",
@@ -28,10 +28,10 @@
     "eslint": "7.32.0",
     "eslint-plugin-jsdoc": "36.1.1",
     "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-promise": "5.1.0",
+    "eslint-plugin-promise": "5.1.1",
     "eslint-plugin-sort-requires": "2.1.0",
     "eslint-plugin-unicorn": "37.0.1",
-    "husky": "7.0.2"
+    "husky": "7.0.4"
   },
   "scripts": {
     "lint": "eslint ./ --report-unused-disable-directives --format=codeframe --ignore-pattern='!.*'",
