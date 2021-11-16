@@ -12,8 +12,7 @@ const prepareAnswer = (domain, answer) => `— ${domain} ${dim(answer
     ? answer
         .filter(elem => elem.data.match(/(\d{1,3}\.){3}\d{1,3}/))
         .map(elem => elem.data)
-        .sort()
-        .pop()
+        .unshift()
     : '# NO ANSWER #')}`;
 
 const logRecords = (arr, name) => {
@@ -43,7 +42,7 @@ const logRecords = (arr, name) => {
                 await promise.delay(timeout.pause);
 
                 // get dns records
-                const cloudflare = [];
+                const defResolver = [];
                 const nextdns = [];
                 const common = [];
 
@@ -52,22 +51,22 @@ const logRecords = (arr, name) => {
                         request.doh({domain}),
                         request.doh({domain, resolver: `https://dns.nextdns.io/${env.next.config}/${env.next.checker}`}),
                     ]);
-                    return {domain, cloudflare: res[0].Answer, nextdns: res[1].Answer};
+                    return {domain, defResolver: res[0].Answer, nextdns: res[1].Answer};
                 }));
 
                 answers.forEach(answer => {
-                    const preparedDef = prepareAnswer(answer.domain, answer.cloudflare);
+                    const preparedDef = prepareAnswer(answer.domain, answer.defResolver);
                     const preparedNext = prepareAnswer(answer.domain, answer.nextdns);
 
                     if (preparedDef === preparedNext) {
                         common.push(preparedDef);
                     } else {
-                        cloudflare.push(preparedDef);
+                        defResolver.push(preparedDef);
                         nextdns.push(preparedNext);
                     }
                 });
 
-                logRecords(cloudflare, 'cloudflare');
+                logRecords(defResolver, 'default resolver');
                 logRecords(nextdns, 'nextdns');
                 logRecords(common, 'common');
 
