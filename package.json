@@ -1,7 +1,7 @@
 {
   "name": "@k03mad/cli-tools-next",
   "description": "My CLI tools",
-  "version": "8.0.8",
+  "version": "8.0.9",
   "maintainers": [
     "Kirill Molchanov <k03.mad@gmail.com"
   ],
