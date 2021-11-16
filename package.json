@@ -17,7 +17,7 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@k03mad/utils": "19.2.8",
+    "@k03mad/utils": "19.2.11",
     "chalk": "4.1.2",
     "hexyjs": "2.1.4",
     "update-notifier": "5.1.0",
