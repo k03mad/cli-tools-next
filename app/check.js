@@ -12,7 +12,7 @@ const prepareAnswer = (domain, answer) => `— ${domain} ${dim(answer
     ? answer
         .filter(elem => elem.data.match(/(\d{1,3}\.){3}\d{1,3}/))
         .map(elem => elem.data)
-        .unshift()
+        .shift()
     : '# NO ANSWER #')}`;
 
 const logRecords = (arr, name) => {
