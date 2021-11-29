@@ -17,7 +17,7 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@k03mad/utils": "20.4.0",
+    "@k03mad/utils": "20.5.0",
     "colorette": "2.0.16",
     "hexyjs": "2.1.4",
     "update-notifier": "5.1.0",
