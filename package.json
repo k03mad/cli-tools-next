@@ -17,24 +17,23 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@k03mad/utils": "19.5.5",
-    "chalk": "4.1.2",
+    "@k03mad/utils": "20.2.0",
+    "colorette": "2.0.16",
     "hexyjs": "2.1.4",
     "update-notifier": "5.1.0",
     "yargs": "17.2.1"
   },
   "devDependencies": {
-    "@k03mad/eslint-config": "8.2.3",
-    "eslint": "7.32.0",
+    "@k03mad/eslint-config": "9.0.0",
+    "eslint": "8.3.0",
     "eslint-plugin-jsdoc": "37.0.3",
     "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-promise": "5.1.1",
     "eslint-plugin-sort-requires": "2.1.0",
     "eslint-plugin-unicorn": "39.0.0",
     "husky": "7.0.4"
   },
   "scripts": {
-    "lint": "eslint ./ --report-unused-disable-directives --format=codeframe --ignore-pattern='!.*'",
+    "lint": "eslint ./ --report-unused-disable-directives --ignore-pattern='!.*'",
     "setup": "npm i",
     "prepare": "husky install"
   }

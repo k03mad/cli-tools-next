@@ -4,7 +4,7 @@
 
 const hexyjs = require('hexyjs');
 const {args} = require('../env');
-const {green, yellow, magenta} = require('chalk');
+const {green, yellow, magenta} = require('colorette');
 const {lists} = require('./helpers/consts');
 const {next, print, request} = require('@k03mad/utils');
 

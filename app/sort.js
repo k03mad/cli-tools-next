@@ -3,7 +3,7 @@
 'use strict';
 
 const hexyjs = require('hexyjs');
-const {green, dim, cyan, red, blue} = require('chalk');
+const {green, dim, cyan, red, blue} = require('colorette');
 const {lists, timeout} = require('./helpers/consts');
 const {next, hosts, promise, print, array} = require('@k03mad/utils');
 
