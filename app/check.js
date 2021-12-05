@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 
-'use strict';
+import utils from '@k03mad/utils';
+import {cyan, dim, green, yellow} from 'colorette';
+import hexyjs from 'hexyjs';
 
-const env = require('../env');
-const hexyjs = require('hexyjs');
-const {cyan, dim, yellow, green} = require('colorette');
-const {lists, timeout} = require('./helpers/consts');
-const {next, request, promise, print, object} = require('@k03mad/utils');
+import env from '../env.js';
+import consts from './helpers/consts.js';
+
+const {lists, timeout} = consts;
+const {next, request, promise, print, object} = utils;
 
 const prepareAnswer = (domain, answer) => `— ${domain} ${dim(answer
     ? answer

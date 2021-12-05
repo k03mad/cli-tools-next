@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
-'use strict';
+import utils from '@k03mad/utils';
+import {green} from 'colorette';
 
-const env = require('../env');
-const {green} = require('colorette');
-const {print, next, hosts} = require('@k03mad/utils');
+import env from '../env.js';
+
+const {next, print, hosts} = utils;
 
 const exclude = {
     '+': [

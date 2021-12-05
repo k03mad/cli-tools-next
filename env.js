@@ -1,14 +1,9 @@
-'use strict';
+import yargs from 'yargs';
+import {hideBin} from 'yargs/helpers';
 
-const pkg = require('./package.json');
-const updateNotifier = require('update-notifier');
-const {argv} = require('yargs');
+const args = yargs(hideBin(process.argv)).argv._;
 
-updateNotifier({pkg}).notify();
-
-const args = argv._;
-
-module.exports = {
+export default {
     args: args.length > 0 ? args : [],
 
     next: {

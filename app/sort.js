@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 
-'use strict';
+import utils from '@k03mad/utils';
+import {blue, cyan, dim, green, red} from 'colorette';
+import hexyjs from 'hexyjs';
 
-const hexyjs = require('hexyjs');
-const {green, dim, cyan, red, blue} = require('colorette');
-const {lists, timeout} = require('./helpers/consts');
-const {next, hosts, promise, print, array} = require('@k03mad/utils');
+import consts from './helpers/consts.js';
+
+const {lists, timeout} = consts;
+const {next, hosts, promise, print, array} = utils;
 
 const query = ({method, list, domain}) => next.query({
     method,

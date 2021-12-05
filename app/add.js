@@ -1,16 +1,18 @@
 #!/usr/bin/env node
 
-'use strict';
+import utils from '@k03mad/utils';
+import {green, magenta, yellow} from 'colorette';
+import hexyjs from 'hexyjs';
 
-const hexyjs = require('hexyjs');
-const {args} = require('../env');
-const {green, yellow, magenta} = require('colorette');
-const {lists} = require('./helpers/consts');
-const {next, print, request} = require('@k03mad/utils');
+import env from '../env.js';
+import consts from './helpers/consts.js';
+
+const {lists} = consts;
+const {next, print, request} = utils;
 
 (async () => {
     try {
-        const [list, addDomain] = args;
+        const [list, addDomain] = env.args;
 
         if (Object.keys(lists).includes(list) && addDomain) {
             const domain = addDomain.trim();
