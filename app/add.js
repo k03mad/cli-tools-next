@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import utils from '@k03mad/utils';
-import {green, magenta, yellow} from 'colorette';
+import chalk from 'chalk';
 import hexyjs from 'hexyjs';
 
 import env from '../env.js';
@@ -9,6 +9,7 @@ import consts from './helpers/consts.js';
 
 const {lists} = consts;
 const {next, print, request} = utils;
+const {green, magenta, yellow} = chalk;
 
 (async () => {
     try {

@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
 import utils from '@k03mad/utils';
-import {green} from 'colorette';
+import chalk from 'chalk';
 
 import env from '../env.js';
 
-const {next, print, hosts} = utils;
+const {green} = chalk;
+const {hosts, next, print} = utils;
 
 const exclude = {
     '+': [
@@ -48,7 +49,7 @@ const exclude = {
                     method = 'unshift';
                 }
 
-                logs.forEach(({status, name, deviceName}) => {
+                logs.forEach(({deviceName, name, status}) => {
                     if (
                         deviceName !== env.next.checker
                         && !exclude[list].some(elem => name.includes(elem))

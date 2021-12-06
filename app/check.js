@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 
 import utils from '@k03mad/utils';
-import {cyan, dim, green, yellow} from 'colorette';
+import chalk from 'chalk';
 import hexyjs from 'hexyjs';
 
 import env from '../env.js';
 import consts from './helpers/consts.js';
 
 const {lists, timeout} = consts;
-const {next, request, promise, print, object} = utils;
+const {cyan, dim, green, yellow} = chalk;
+const {next, object, print, promise, request} = utils;
 
 const prepareAnswer = (domain, answer) => `— ${domain} ${dim(answer
     ? answer

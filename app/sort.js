@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 
 import utils from '@k03mad/utils';
-import {blue, cyan, dim, green, red} from 'colorette';
+import chalk from 'chalk';
 import hexyjs from 'hexyjs';
 
 import consts from './helpers/consts.js';
 
 const {lists, timeout} = consts;
-const {next, hosts, promise, print, array} = utils;
+const {blue, cyan, dim, green, red} = chalk;
+const {array, hosts, next, print, promise} = utils;
 
-const query = ({method, list, domain}) => next.query({
+const query = ({domain, list, method}) => next.query({
     method,
     path: `${list}/hex:${hexyjs.strToHex(domain)}`,
 });
