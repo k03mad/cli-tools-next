@@ -18,7 +18,7 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@k03mad/util": "1.2.0",
+    "@k03mad/util": "1.2.1",
     "chalk": "5.0.0",
     "hexyjs": "2.1.4",
     "lodash": "4.17.21",
