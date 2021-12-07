@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import utils from '@k03mad/utils';
+import utils from '@k03mad/util';
 import chalk from 'chalk';
 
 import env from '../env.js';
@@ -63,10 +63,12 @@ const exclude = {
                 lastTime = logs[logs.length - 1].timestamp;
             }
 
+            const domainsSet = new Set(domainsList);
+
             console.log(
                 sort === 'on'
-                    ? hosts.comment(hosts.sort(new Set(domainsList)))
-                    : [...new Set(domainsList)].reverse().join('\n'),
+                    ? hosts.comment(domainsSet)
+                    : [...domainsSet].reverse().join('\n'),
             );
         } else {
             console.log(`Args: ${green('{type (-|+)} {sort (on|off = on)} {pages = 100}')}`);

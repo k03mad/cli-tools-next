@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import utils from '@k03mad/utils';
+import utils from '@k03mad/util';
 import chalk from 'chalk';
 import hexyjs from 'hexyjs';
 
