@@ -3,12 +3,13 @@
 import utils from '@k03mad/util';
 import chalk from 'chalk';
 import hexyjs from 'hexyjs';
+import _ from 'lodash';
 
 import consts from './helpers/consts.js';
 
 const {lists, timeout} = consts;
 const {blue, cyan, dim, green, red} = chalk;
-const {array, hosts, next, print, promise} = utils;
+const {hosts, next, print, promise} = utils;
 
 const query = ({domain, list, method}) => next.query({
     method,
@@ -59,7 +60,7 @@ const query = ({domain, list, method}) => next.query({
                 red(`${list.toUpperCase()}: different domains count after sort`),
                 `Before: ${currentDomains.length}`,
                 `After: ${afterDomains.length})`,
-                `Diff: ${blue(array.diff(currentDomains, afterDomains).join(', '))}`,
+                `Diff: ${blue(_.xor(currentDomains, afterDomains).join(', '))}`,
             ].join('\n'));
         }
     }));
