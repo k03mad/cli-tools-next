@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 
-import utils from '@k03mad/util';
+import {hosts, next, print} from '@k03mad/util';
 import chalk from 'chalk';
 
 import env from '../env.js';
 
 const {green} = chalk;
-const {hosts, next, print} = utils;
 
 const exclude = {
     '+': [

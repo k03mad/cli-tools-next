@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import utils from '@k03mad/util';
+import {hosts, next, print, promise} from '@k03mad/util';
 import chalk from 'chalk';
 import hexyjs from 'hexyjs';
 import _ from 'lodash';
@@ -9,7 +9,6 @@ import consts from './helpers/consts.js';
 
 const {lists, timeout} = consts;
 const {blue, cyan, dim, green, red} = chalk;
-const {hosts, next, print, promise} = utils;
 
 const query = ({domain, list, method}) => next.query({
     method,
