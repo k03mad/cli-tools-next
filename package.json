@@ -18,7 +18,7 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@k03mad/util": "4.0.0",
+    "@k03mad/util": "4.0.1",
     "chalk": "5.0.0",
     "hexyjs": "2.1.4",
     "lodash": "4.17.21",
@@ -26,13 +26,13 @@
   },
   "devDependencies": {
     "@k03mad/eslint-config": "10.0.17",
-    "eslint": "8.5.0",
-    "eslint-plugin-import": "2.25.3",
-    "eslint-plugin-jsdoc": "37.4.0",
+    "eslint": "8.6.0",
+    "eslint-plugin-import": "2.25.4",
+    "eslint-plugin-jsdoc": "37.5.1",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-simple-import-sort": "7.0.0",
     "eslint-plugin-sort-destructure-keys": "1.4.0",
-    "eslint-plugin-unicorn": "39.0.0",
+    "eslint-plugin-unicorn": "40.0.0",
     "husky": "7.0.4"
   },
   "scripts": {
