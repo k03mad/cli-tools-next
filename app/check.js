@@ -53,6 +53,7 @@ const logRecords = (arr, name) => {
                         request.doh({domain}),
                         request.doh({domain, resolver: `https://dns.nextdns.io/${env.next.config}/${env.next.checker}`}),
                     ]);
+
                     return {domain, defResolver: res[0].Answer, nextdns: res[1].Answer};
                 }));
 
@@ -111,6 +112,7 @@ const logRecords = (arr, name) => {
                         }
 
                         foundInLists.push(`— ${domain}\n${dim(lastDomainLog.lists.sort().join('\n'))}`);
+
                         lastDomainLog.lists.forEach(elem => {
                             object.count(listsStat, elem);
                         });
@@ -118,6 +120,7 @@ const logRecords = (arr, name) => {
                 }));
 
                 logRecords(foundInLists.sort(), 'reasons');
+
                 logRecords(
                     Object
                         .entries(listsStat)
