@@ -2,21 +2,42 @@
 
 import {next, print} from '@k03mad/util';
 import chalk from 'chalk';
+import cliProgress from 'cli-progress';
 import _ from 'lodash';
 import puppeteer from 'puppeteer';
 
 import env from '../env.js';
 
-const {blue, red} = chalk;
+const {blue, gray, green, red} = chalk;
+
+const DEFAULT_PAGES = 50;
+
+const getBar = name => {
+    const options = {
+        format: `${blue(name)} ${green('[{bar}]')} {value}/{total} ${gray('{extra}')}`,
+        hideCursor: true,
+        stopOnComplete: true,
+        autopadding: true,
+        barCompleteChar: '#',
+        barIncompleteChar: '.',
+    };
+
+    return new cliProgress.SingleBar(options);
+};
 
 (async () => {
     try {
-        const [pages = 30] = env.args;
+        let [pages = DEFAULT_PAGES] = env.args;
+        pages = Number(pages);
+
+        const nextBar = getBar('nextdns');
+        nextBar.start(pages, 0, {extra: ''});
+
         const blocked = [];
 
         let lastTime;
 
-        for (let i = 1; i <= Number(pages); i++) {
+        for (let i = 1; i <= pages; i++) {
             const {logs} = await next.query({
                 path: 'logs',
                 searchParams: {
@@ -37,41 +58,57 @@ const {blue, red} = chalk;
             });
 
             lastTime = logs[logs.length - 1].timestamp;
+            nextBar.update(i, {extra: lastTime});
         }
 
-        for (const elem of _.sortBy(blocked, 'name')) {
-            const url = `https://oisd.nl/excludes.php?w=${elem.name}`;
+        if (blocked.length > 0) {
+            const oisdBar = getBar('oisd   ');
+            oisdBar.start(blocked.length, 0, {extra: ''});
+
+            const output = [];
 
             const browser = await puppeteer.launch();
             const page = await browser.newPage();
-            await page.goto(url);
 
-            const body = await page.$('body');
-            const text = await body.evaluate(node => node.textContent);
+            for (const [i, elem] of _.sortBy(blocked, 'name').entries()) {
+                const url = `https://oisd.nl/excludes.php?w=${elem.name}`;
 
-            const formatted = text
-                .replace(/.+not included in the oisd blocklist\?/, '')
-                .replace(/getreport.+/, '')
-                .replace(/-{9}.+/, '')
-                .replace(/(\s+)?Found in: /g, '\n> wl: ')
-                .replace(/(\s+)?CNAME for: /g, '\n> cname: ')
-                .replace(/(\s+)?Parent of: /g, '\n> parent: ')
-                .trim();
+                await page.goto(url);
 
-            if (!formatted.includes('No info on this domain')) {
-                console.log(`\n${blue(url)}`);
+                const body = await page.$('body');
+                const text = await body.evaluate(node => node.textContent);
 
-                console.log(red(`(${elem.lists.map(name => {
-                    const [first] = name.split(' ');
-                    return first;
-                }).join(', ')})`));
+                const formatted = text
+                    .replace(/.+not included in the oisd blocklist\?/, '')
+                    .replace(/getreport.+/, '')
+                    .replace(/-{9}.+/, '')
+                    .replace(/(\s+)?Found in: /g, '\n> wl: ')
+                    .replace(/(\s+)?CNAME for: /g, '\n> cname: ')
+                    .replace(/(\s+)?Parent of: /g, '\n> parent: ')
+                    .trim();
 
-                console.log(formatted);
+                if (
+                    !formatted.includes('No info on this domain')
+                    && !formatted.includes('IS being blocked by oisd')
+                ) {
+                    output.push([
+                        blue(url),
+
+                        red(`[${elem.lists.map(name => {
+                            const [first] = name.split(' ');
+                            return first;
+                        }).join(', ')}]`),
+
+                        formatted,
+                    ]);
+                }
+
+                oisdBar.update(i + 1, {extra: elem.name});
             }
 
+            console.log(`\n${output.map(elem => elem.join('\n')).join('\n\n')}`);
             await browser.close();
         }
-
     } catch (err) {
         print.ex(err, {full: true, exit: true});
     }

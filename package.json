@@ -19,8 +19,9 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@k03mad/util": "4.0.4",
+    "@k03mad/util": "4.0.5",
     "chalk": "5.0.0",
+    "cli-progress": "3.10.0",
     "hexyjs": "2.1.4",
     "lodash": "4.17.21",
     "puppeteer": "13.3.2",
