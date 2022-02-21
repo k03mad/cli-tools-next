@@ -11,7 +11,7 @@ const {blue, red} = chalk;
 
 (async () => {
     try {
-        const [pages = 3] = env.args;
+        const [pages = 50] = env.args;
         const blocked = [];
 
         let lastTime;
