@@ -11,7 +11,7 @@ const {blue, red} = chalk;
 
 (async () => {
     try {
-        const [pages = 50] = env.args;
+        const [pages = 30] = env.args;
         const blocked = [];
 
         let lastTime;
@@ -20,6 +20,7 @@ const {blue, red} = chalk;
             const {logs} = await next.query({
                 path: 'logs',
                 searchParams: {
+                    blockedQueriesOnly: 1,
                     before: lastTime || '',
                     simple: 1,
                     lng: 'en',
@@ -28,8 +29,7 @@ const {blue, red} = chalk;
 
             logs.forEach(elem => {
                 if (
-                    elem.status === 2
-                    && !elem.lists.includes('oisd')
+                    !elem.lists.includes('oisd')
                     && !blocked.map(row => row.name).includes(elem.name)
                 ) {
                     blocked.push(elem);
