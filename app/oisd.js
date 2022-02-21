@@ -1,17 +1,18 @@
 #!/usr/bin/env node
 
-import {hosts, next, print} from '@k03mad/util';
+import {next, print} from '@k03mad/util';
 import chalk from 'chalk';
+import _ from 'lodash';
 import puppeteer from 'puppeteer';
 
 import env from '../env.js';
 
-const {blue} = chalk;
+const {blue, red} = chalk;
 
 (async () => {
     try {
-        const [pages = 50] = env.args;
-        const list = new Set();
+        const [pages = 3] = env.args;
+        const blocked = [];
 
         let lastTime;
 
@@ -26,22 +27,24 @@ const {blue} = chalk;
             });
 
             logs.forEach(elem => {
-                if (elem.status === 2 && !elem.lists.includes('oisd')) {
-                    list.add(elem.name);
+                if (
+                    elem.status === 2
+                    && !elem.lists.includes('oisd')
+                    && !blocked.map(row => row.name).includes(elem.name)
+                ) {
+                    blocked.push(elem);
                 }
             });
 
             lastTime = logs[logs.length - 1].timestamp;
         }
 
-        const oisdQuery = hosts
-            .sort(list)
-            .map(elem => `https://oisd.nl/excludes.php?w=${elem}`);
+        for (const elem of _.sortBy(blocked, 'name')) {
+            const url = `https://oisd.nl/excludes.php?w=${elem.name}`;
 
-        for (const elem of oisdQuery) {
             const browser = await puppeteer.launch();
             const page = await browser.newPage();
-            await page.goto(elem);
+            await page.goto(url);
 
             const body = await page.$('body');
             const text = await body.evaluate(node => node.textContent);
@@ -50,11 +53,19 @@ const {blue} = chalk;
                 .replace(/.+not included in the oisd blocklist\?/, '')
                 .replace(/getreport.+/, '')
                 .replace(/-{9}.+/, '')
-                .replace(/(\s+)?Found in: /g, '\n> ')
+                .replace(/(\s+)?Found in: /g, '\n> wl: ')
+                .replace(/(\s+)?CNAME for: /g, '\n> cname: ')
+                .replace(/(\s+)?Parent of: /g, '\n> parent: ')
                 .trim();
 
             if (!formatted.includes('No info on this domain')) {
-                console.log(`\n${blue(elem)}`);
+                console.log(`\n${blue(url)}`);
+
+                console.log(red(`(${elem.lists.map(name => {
+                    const [first] = name.split(' ');
+                    return first;
+                }).join(', ')})`));
+
                 console.log(formatted);
             }
 
