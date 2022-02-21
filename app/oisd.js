@@ -50,7 +50,7 @@ const {blue} = chalk;
                 .replace(/.+not included in the oisd blocklist\?/, '')
                 .replace(/getreport.+/, '')
                 .replace(/-{9}.+/, '')
-                .replace(/(\s+)?Found in: /g, '\n')
+                .replace(/(\s+)?Found in: /g, '\n> ')
                 .trim();
 
             if (!formatted.includes('No info on this domain')) {
