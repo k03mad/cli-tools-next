@@ -9,8 +9,14 @@ import env from '../env.js';
 
 const {blue, red} = chalk;
 
-const DEFAULT_PAGES = 50;
+const DEFAULT_PAGES = 20;
 const TRIES_WAIT_FOR_LOADING = 5;
+
+const removeReport = page => page
+    .$eval('#domainreport', element => element.remove()).catch();
+
+const getBodyText = page => page
+    .$eval('body', ({textContent}) => textContent);
 
 (async () => {
     try {
@@ -59,14 +65,16 @@ const TRIES_WAIT_FOR_LOADING = 5;
                 const url = `https://oisd.nl/excludes.php?w=${elem.name}`;
 
                 await page.goto(url);
+                await removeReport(page);
 
-                await page.$eval('#domainreport', element => element.remove());
-                let text = await page.$eval('body', ({textContent}) => textContent);
+                let text = await getBodyText(page);
 
                 for (let t = 0; t < TRIES_WAIT_FOR_LOADING; t++) {
                     if (text.includes('Loading details')) {
                         await promise.delay(1000);
-                        text = await page.$eval('body', ({textContent}) => textContent);
+                        await removeReport(page);
+
+                        text = await getBodyText(page);
                     } else {
                         break;
                     }
