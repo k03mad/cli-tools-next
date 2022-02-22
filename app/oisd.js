@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import {next, print, progress} from '@k03mad/util';
+import {next, print, progress, promise} from '@k03mad/util';
 import chalk from 'chalk';
 import _ from 'lodash';
 import puppeteer from 'puppeteer';
@@ -10,6 +10,7 @@ import env from '../env.js';
 const {blue, red} = chalk;
 
 const DEFAULT_PAGES = 50;
+const TRIES_WAIT_FOR_LOADING = 5;
 
 (async () => {
     try {
@@ -59,13 +60,21 @@ const DEFAULT_PAGES = 50;
 
                 await page.goto(url);
 
-                const body = await page.$('body');
-                const text = await body.evaluate(node => node.textContent);
+                await page.$eval('#domainreport', element => element.remove());
+                let text = await page.$eval('body', ({textContent}) => textContent);
+
+                for (let t = 0; t < TRIES_WAIT_FOR_LOADING; t++) {
+                    if (text.includes('Loading details')) {
+                        await promise.delay(1000);
+                        text = await page.$eval('body', ({textContent}) => textContent);
+                    } else {
+                        break;
+                    }
+                }
 
                 const formatted = text
                     .replace(/.+not included in the oisd blocklist\?/, '')
                     .replace(/getreport.+/, '')
-                    .replace(/-{9}.+/, '')
                     .replace(/(\s+)?Found in: /g, '\n> wl: ')
                     .replace(/(\s+)?CNAME for: /g, '\n> cname: ')
                     .replace(/(\s+)?Parent of: /g, '\n> parent: ')
