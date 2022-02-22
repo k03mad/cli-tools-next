@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import {hosts, next, print, promise} from '@k03mad/util';
+import {hosts, next, print, progress, promise} from '@k03mad/util';
 import chalk from 'chalk';
 import hexyjs from 'hexyjs';
 import _ from 'lodash';
@@ -19,48 +19,64 @@ const query = ({domain, list, method}) => next.query({
     const results = await Promise.allSettled(Object.values(lists || {}).map(async list => {
         const currentDomains = await next.list({path: list});
 
-        console.log([
-            '',
-            `${dim(cyan('before'))} ${green(list)}: ${currentDomains.length} domains\n`,
-            dim(currentDomains.join('\n')),
-        ].join('\n'));
+        if (currentDomains.length > 0) {
+            console.log([
+                '',
+                `${dim(cyan('before'))} ${green(list)}: ${currentDomains.length} domains\n`,
+                dim(currentDomains.join('\n')),
+                '',
+            ].join('\n'));
 
-        await Promise.all(currentDomains.map(domain => query({method: 'DELETE', list, domain})));
+            const barDelete = progress.start('DELETE', currentDomains.length);
 
-        const sortedReversed = hosts.sort(new Set(currentDomains)).reverse();
+            const domainsDeleted = [];
 
-        for (const domain of sortedReversed) {
-            await promise.delay(timeout.put);
+            await Promise.all(currentDomains.map(async domain => {
+                await query({method: 'DELETE', list, domain});
 
-            try {
-                await query({method: 'PUT', list, domain});
-            } catch {
-                await promise.delay(timeout.pause);
+                domainsDeleted.push(domain);
+                progress.update(barDelete, domainsDeleted.length, domain);
+            }));
+
+            const sortedReversed = hosts.sort(new Set(currentDomains)).reverse();
+
+            const barPut = progress.start('PUT   ', sortedReversed.length);
+
+            for (const [i, domain] of sortedReversed.entries()) {
+                await promise.delay(timeout.put);
 
                 try {
                     await query({method: 'PUT', list, domain});
-                } catch (err) {
-                    print.ex(err, {before: `Cannot add "${domain}" to "${list}"`});
+                } catch {
+                    await promise.delay(timeout.pause);
+
+                    try {
+                        await query({method: 'PUT', list, domain});
+                    } catch (err) {
+                        print.ex(err, {before: `Cannot add "${domain}" to "${list}"`});
+                    }
                 }
+
+                progress.update(barPut, i + 1, domain);
             }
-        }
 
-        await promise.delay(timeout.pause);
-        const afterDomains = await next.list({path: list});
+            await promise.delay(timeout.pause);
+            const afterDomains = await next.list({path: list});
 
-        console.log([
-            '',
-            `${dim(cyan('after'))} ${green(list)}: ${afterDomains.length} domains\n`,
-            dim(afterDomains.join('\n')),
-        ].join('\n'));
-
-        if (currentDomains.length !== afterDomains.length) {
-            throw new Error([
-                red(`${list.toUpperCase()}: different domains count after sort`),
-                `Before: ${currentDomains.length}`,
-                `After: ${afterDomains.length})`,
-                `Diff: ${blue(_.xor(currentDomains, afterDomains).join(', '))}`,
+            console.log([
+                '',
+                `${dim(cyan('after'))} ${green(list)}: ${afterDomains.length} domains\n`,
+                dim(afterDomains.join('\n')),
             ].join('\n'));
+
+            if (currentDomains.length !== afterDomains.length) {
+                throw new Error([
+                    red(`${list.toUpperCase()}: different domains count after sort`),
+                    `Before: ${currentDomains.length}`,
+                    `After: ${afterDomains.length})`,
+                    `Diff: ${blue(_.xor(currentDomains, afterDomains).join(', '))}`,
+                ].join('\n'));
+            }
         }
     }));
 

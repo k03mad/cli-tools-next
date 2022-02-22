@@ -1,37 +1,22 @@
 #!/usr/bin/env node
 
-import {next, print} from '@k03mad/util';
+import {next, print, progress} from '@k03mad/util';
 import chalk from 'chalk';
-import cliProgress from 'cli-progress';
 import _ from 'lodash';
 import puppeteer from 'puppeteer';
 
 import env from '../env.js';
 
-const {blue, gray, green, red} = chalk;
+const {blue, red} = chalk;
 
 const DEFAULT_PAGES = 50;
-
-const getBar = name => {
-    const options = {
-        format: `${blue(name)} ${green('[{bar}]')} {value}/{total} ${gray('{extra}')}`,
-        hideCursor: true,
-        stopOnComplete: true,
-        autopadding: true,
-        barCompleteChar: '#',
-        barIncompleteChar: '.',
-    };
-
-    return new cliProgress.SingleBar(options);
-};
 
 (async () => {
     try {
         let [pages = DEFAULT_PAGES] = env.args;
         pages = Number(pages);
 
-        const nextBar = getBar('nextdns');
-        nextBar.start(pages, 0, {extra: ''});
+        const nextBar = progress.start('nextdns', pages);
 
         const blocked = [];
 
@@ -58,12 +43,11 @@ const getBar = name => {
             });
 
             lastTime = logs[logs.length - 1].timestamp;
-            nextBar.update(i, {extra: lastTime});
+            progress.update(nextBar, i, lastTime);
         }
 
         if (blocked.length > 0) {
-            const oisdBar = getBar('oisd   ');
-            oisdBar.start(blocked.length, 0, {extra: ''});
+            const oisdBar = progress.start('oisd   ', blocked.length);
 
             const output = [];
 
@@ -103,7 +87,7 @@ const getBar = name => {
                     ]);
                 }
 
-                oisdBar.update(i + 1, {extra: elem.name});
+                progress.update(oisdBar, i + 1, elem.name);
             }
 
             console.log(`\n${output.map(elem => elem.join('\n')).join('\n\n')}`);
