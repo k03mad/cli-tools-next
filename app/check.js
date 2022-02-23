@@ -51,7 +51,7 @@ const logRecords = (arr, name) => {
                 const answers = await Promise.all(domains.map(async domain => {
                     const res = await Promise.all([
                         request.doh({domain}),
-                        request.doh({domain, resolver: `https://dns.nextdns.io/${env.next.config}/${env.next.checker}`}),
+                        request.doh({domain, resolver: `https://dns.nextdns.io/${env.next.config}/${env.next.checker}`, expire: '1s'}),
                     ]);
 
                     return {domain, defResolver: res[0].Answer, nextdns: res[1].Answer};

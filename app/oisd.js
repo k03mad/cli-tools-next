@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import {next, print, progress, promise} from '@k03mad/util';
+import {next, print, progress, promise, request} from '@k03mad/util';
 import chalk from 'chalk';
 import _ from 'lodash';
 import puppeteer from 'puppeteer';
@@ -67,56 +67,68 @@ const getBodyText = async page => {
             const page = await browser.newPage();
 
             for (const [i, elem] of _.sortBy(blocked, 'name').entries()) {
-                const url = `https://oisd.nl/excludes.php?w=${elem.name}`;
+                const {Answer} = await request.doh({
+                    domain: elem.name,
+                    resolver: `https://dns.nextdns.io/${env.next.config}/${env.next.checker}`,
+                    expire: '1s',
+                });
 
-                await page.goto(url);
-                await removeReport(page);
+                if (Answer?.pop()?.data === '0.0.0.0') {
 
-                let text = await getBodyText(page);
+                    const url = `https://oisd.nl/excludes.php?w=${elem.name}`;
 
-                for (let t = 0; t < TRIES_WAIT_FOR_LOADING; t++) {
-                    if (!text || text.includes('Loading details')) {
-                        await promise.delay(1000);
-                        await removeReport(page);
+                    await page.goto(url);
+                    await removeReport(page);
 
-                        text = await getBodyText(page);
-                    } else {
-                        break;
+                    let text = await getBodyText(page);
+
+                    for (let t = 0; t < TRIES_WAIT_FOR_LOADING; t++) {
+                        if (!text || text.includes('Loading details')) {
+                            await promise.delay(1000);
+                            await removeReport(page);
+
+                            text = await getBodyText(page);
+                        } else {
+                            break;
+                        }
                     }
-                }
 
-                const message = [
-                    blue(url),
+                    const message = [
+                        blue(url),
 
-                    red(`[${elem.lists.map(name => {
-                        const [first] = name.split(' ');
-                        return first;
-                    }).join(', ')}]`),
-                ];
+                        red(`[${elem.lists.map(name => {
+                            const [first] = name.split(' ');
+                            return first;
+                        }).join(', ')}]`),
+                    ];
 
-                if (text) {
-                    const formatted = text
-                        .replace(/.+not included in the oisd blocklist\?/, '')
-                        .replace(/getreport.+/, '')
-                        .replace(/(\s+)?Found in: /g, '\n> wl: ')
-                        .replace(/(\s+)?CNAME for: /g, '\n> cname: ')
-                        .replace(/(\s+)?Parent of: /g, '\n> parent: ')
-                        .trim();
+                    if (text) {
+                        const formatted = text
+                            .replace(/.+not included in the oisd blocklist\?/, '')
+                            .replace(/getreport.+/, '')
+                            .replace(/(\s+)?Found in: /g, '\n> wl: ')
+                            .replace(/(\s+)?CNAME for: /g, '\n> cname: ')
+                            .replace(/(\s+)?Parent of: /g, '\n> parent: ')
+                            .trim();
 
-                    if (
-                        !formatted.includes('No info on this domain')
+                        if (
+                            !formatted.includes('No info on this domain')
                     && !formatted.includes('IS being blocked by oisd')
-                    ) {
-                        output.push([...message, formatted]);
+                        ) {
+                            output.push([...message, formatted]);
+                        }
+                    } else {
+                        output.push([...message, yellow("Can't parse results")]);
                     }
-                } else {
-                    output.push([...message, yellow("Can't parse results")]);
                 }
 
                 progress.update(oisdBar, i + 1, elem.name);
             }
 
-            console.log(`\n${output.map(elem => elem.join('\n')).join('\n\n')}`);
+            if (output.length > 0) {
+                console.log(`\n${output.map(elem => elem.join('\n')).join('\n\n')}`);
+            }
+
             await browser.close();
         }
     } catch (err) {
