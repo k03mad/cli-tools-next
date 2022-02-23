@@ -61,15 +61,31 @@ const getBodyText = async page => {
             progress.update(nextBar, i, lastTime);
         }
 
-        if (blocked.length > 0) {
-            const oisdBar = progress.start('oisd   ', blocked.length);
+        const filterBar = progress.start('filter ', blocked.length);
+        const checked = [];
+
+        const checkBlock = await Promise.all(blocked.map(async elem => {
+            const {Answer} = await next.doh(elem.name);
+
+            checked.push(elem.name);
+            progress.update(filterBar, checked.length, elem.name);
+
+            if (Answer?.pop()?.data === '0.0.0.0') {
+                return elem;
+            }
+        }));
+
+        const blockedFiltered = checkBlock.filter(Boolean);
+
+        if (blockedFiltered.length > 0) {
+            const oisdBar = progress.start('oisd   ', blockedFiltered.length);
 
             const output = [];
 
             const browser = await puppeteer.launch();
             const page = await browser.newPage();
 
-            for (const [i, elem] of _.sortBy(blocked, 'name').entries()) {
+            for (const [i, elem] of _.sortBy(blockedFiltered, 'name').entries()) {
                 const {Answer} = await next.doh(elem.name);
 
                 if (Answer?.pop()?.data === '0.0.0.0') {
