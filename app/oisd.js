@@ -86,55 +86,50 @@ const getBodyText = async page => {
             const page = await browser.newPage();
 
             for (const [i, elem] of _.sortBy(blockedFiltered, 'name').entries()) {
-                const {Answer} = await next.doh(elem.name);
+                const url = `https://oisd.nl/excludes.php?w=${elem.name}`;
 
-                if (Answer?.pop()?.data === '0.0.0.0') {
+                await page.goto(url);
+                await removeReport(page);
 
-                    const url = `https://oisd.nl/excludes.php?w=${elem.name}`;
+                let text = await getBodyText(page);
 
-                    await page.goto(url);
-                    await removeReport(page);
+                for (let t = 0; t < TRIES_WAIT_FOR_LOADING; t++) {
+                    if (!text || text.includes('Loading details')) {
+                        await promise.delay(1000);
+                        await removeReport(page);
 
-                    let text = await getBodyText(page);
-
-                    for (let t = 0; t < TRIES_WAIT_FOR_LOADING; t++) {
-                        if (!text || text.includes('Loading details')) {
-                            await promise.delay(1000);
-                            await removeReport(page);
-
-                            text = await getBodyText(page);
-                        } else {
-                            break;
-                        }
-                    }
-
-                    const message = [
-                        blue(url),
-
-                        red(`[${elem.lists.map(name => {
-                            const [first] = name.split(' ');
-                            return first;
-                        }).join(', ')}]`),
-                    ];
-
-                    if (text) {
-                        const formatted = text
-                            .replace(/.+not included in the oisd blocklist\?/, '')
-                            .replace(/getreport.+/, '')
-                            .replace(/(\s+)?Found in: /g, '\n> wl: ')
-                            .replace(/(\s+)?CNAME for: /g, '\n> cname: ')
-                            .replace(/(\s+)?Parent of: /g, '\n> parent: ')
-                            .trim();
-
-                        if (
-                            !formatted.includes('No info on this domain')
-                    && !formatted.includes('IS being blocked by oisd')
-                        ) {
-                            output.push([...message, formatted]);
-                        }
+                        text = await getBodyText(page);
                     } else {
-                        output.push([...message, yellow("Can't parse results")]);
+                        break;
                     }
+                }
+
+                const message = [
+                    blue(url),
+
+                    red(`[${elem.lists.map(name => {
+                        const [first] = name.split(' ');
+                        return first;
+                    }).join(', ')}]`),
+                ];
+
+                if (text) {
+                    const formatted = text
+                        .replace(/.+not included in the oisd blocklist\?/, '')
+                        .replace(/getreport.+/, '')
+                        .replace(/(\s+)?Found in: /g, '\n> wl: ')
+                        .replace(/(\s+)?CNAME for: /g, '\n> cname: ')
+                        .replace(/(\s+)?Parent of: /g, '\n> parent: ')
+                        .trim();
+
+                    if (
+                        !formatted.includes('No info on this domain')
+                    && !formatted.includes('IS being blocked by oisd')
+                    ) {
+                        output.push([...message, formatted]);
+                    }
+                } else {
+                    output.push([...message, yellow("Can't parse results")]);
                 }
 
                 progress.update(oisdBar, i + 1, elem.name);
