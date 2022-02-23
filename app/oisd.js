@@ -12,8 +12,11 @@ const {blue, red, yellow} = chalk;
 const DEFAULT_PAGES = 20;
 const TRIES_WAIT_FOR_LOADING = 5;
 
-const removeReport = page => page
-    .$eval('#domainreport', element => element.remove()).catch();
+const removeReport = async page => {
+    try {
+        await page.$eval('#domainreport', element => element.remove());
+    } catch {}
+};
 
 const getBodyText = async page => {
     try {
