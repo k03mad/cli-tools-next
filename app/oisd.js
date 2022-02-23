@@ -7,7 +7,7 @@ import puppeteer from 'puppeteer';
 
 import env from '../env.js';
 
-const {blue, red} = chalk;
+const {blue, red, yellow} = chalk;
 
 const DEFAULT_PAGES = 20;
 const TRIES_WAIT_FOR_LOADING = 5;
@@ -15,8 +15,13 @@ const TRIES_WAIT_FOR_LOADING = 5;
 const removeReport = page => page
     .$eval('#domainreport', element => element.remove()).catch();
 
-const getBodyText = page => page
-    .$eval('body', ({textContent}) => textContent);
+const getBodyText = async page => {
+    try {
+        return await page.$eval('body', ({textContent}) => textContent);
+    } catch {
+        return '';
+    }
+};
 
 (async () => {
     try {
@@ -70,7 +75,7 @@ const getBodyText = page => page
                 let text = await getBodyText(page);
 
                 for (let t = 0; t < TRIES_WAIT_FOR_LOADING; t++) {
-                    if (text.includes('Loading details')) {
+                    if (!text || text.includes('Loading details')) {
                         await promise.delay(1000);
                         await removeReport(page);
 
@@ -80,28 +85,32 @@ const getBodyText = page => page
                     }
                 }
 
-                const formatted = text
-                    .replace(/.+not included in the oisd blocklist\?/, '')
-                    .replace(/getreport.+/, '')
-                    .replace(/(\s+)?Found in: /g, '\n> wl: ')
-                    .replace(/(\s+)?CNAME for: /g, '\n> cname: ')
-                    .replace(/(\s+)?Parent of: /g, '\n> parent: ')
-                    .trim();
+                const message = [
+                    blue(url),
 
-                if (
-                    !formatted.includes('No info on this domain')
+                    red(`[${elem.lists.map(name => {
+                        const [first] = name.split(' ');
+                        return first;
+                    }).join(', ')}]`),
+                ];
+
+                if (text) {
+                    const formatted = text
+                        .replace(/.+not included in the oisd blocklist\?/, '')
+                        .replace(/getreport.+/, '')
+                        .replace(/(\s+)?Found in: /g, '\n> wl: ')
+                        .replace(/(\s+)?CNAME for: /g, '\n> cname: ')
+                        .replace(/(\s+)?Parent of: /g, '\n> parent: ')
+                        .trim();
+
+                    if (
+                        !formatted.includes('No info on this domain')
                     && !formatted.includes('IS being blocked by oisd')
-                ) {
-                    output.push([
-                        blue(url),
-
-                        red(`[${elem.lists.map(name => {
-                            const [first] = name.split(' ');
-                            return first;
-                        }).join(', ')}]`),
-
-                        formatted,
-                    ]);
+                    ) {
+                        output.push([...message, formatted]);
+                    }
+                } else {
+                    output.push([...message, yellow("Can't parse results")]);
                 }
 
                 progress.update(oisdBar, i + 1, elem.name);
