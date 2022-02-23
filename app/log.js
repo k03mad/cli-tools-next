@@ -4,7 +4,9 @@ import {hosts, next, print} from '@k03mad/util';
 import chalk from 'chalk';
 
 import env from '../env.js';
+import consts from './helpers/consts.js';
 
+const {checker} = consts;
 const {green} = chalk;
 
 const exclude = {
@@ -50,7 +52,7 @@ const exclude = {
 
                 logs.forEach(({deviceName, name, status}) => {
                     if (
-                        deviceName !== env.next.checker
+                        deviceName !== checker
                         && !exclude[list].some(elem => name.includes(elem))
                         // eslint-disable-next-line no-mixed-operators
                         && (list === '-' && status === 2 || list === '+' && status !== 2)

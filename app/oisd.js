@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import {next, print, progress, promise, request} from '@k03mad/util';
+import {next, print, progress, promise} from '@k03mad/util';
 import chalk from 'chalk';
 import _ from 'lodash';
 import puppeteer from 'puppeteer';
@@ -67,11 +67,7 @@ const getBodyText = async page => {
             const page = await browser.newPage();
 
             for (const [i, elem] of _.sortBy(blocked, 'name').entries()) {
-                const {Answer} = await request.doh({
-                    domain: elem.name,
-                    resolver: `https://dns.nextdns.io/${env.next.config}/${env.next.checker}`,
-                    expire: '1s',
-                });
+                const {Answer} = await next.doh(elem.name);
 
                 if (Answer?.pop()?.data === '0.0.0.0') {
 
