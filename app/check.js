@@ -7,7 +7,7 @@ import hexyjs from 'hexyjs';
 import env from '../env.js';
 import consts from './helpers/consts.js';
 
-const {lists, timeout} = consts;
+const {checker, lists, timeout} = consts;
 const {cyan, dim, green, yellow} = chalk;
 
 const prepareAnswer = (domain, answer) => `— ${domain} ${dim(answer
@@ -51,7 +51,7 @@ const logRecords = (arr, name) => {
                 const answers = await Promise.all(domains.map(async domain => {
                     const res = await Promise.all([
                         request.doh({domain}),
-                        request.doh({domain, resolver: `https://dns.nextdns.io/${env.next.config}/${env.next.checker}`}),
+                        next.doh(domain),
                     ]);
 
                     return {domain, defResolver: res[0].Answer, nextdns: res[1].Answer};
@@ -88,7 +88,7 @@ const logRecords = (arr, name) => {
                     },
                 });
 
-                const {id} = devices.find(elem => elem.name === env.next.checker);
+                const {id} = devices.find(elem => elem.name === checker);
 
                 await Promise.all(domains.map(async domain => {
                     const {logs} = await next.query({

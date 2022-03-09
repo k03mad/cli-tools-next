@@ -7,4 +7,5 @@ export default {
         put: 2000,
         pause: 5000,
     },
+    checker: 'Mad-Checker',
 };
