@@ -8,9 +8,7 @@
   "repository": "k03mad/cli-tools-next",
   "license": "MIT",
   "bin": {
-    "mad_next_add": "app/add.js",
     "mad_next_check": "app/check.js",
-    "mad_next_log": "app/log.js",
     "mad_next_sort": "app/sort.js",
     "mad_next_oisd": "app/oisd.js"
   },
