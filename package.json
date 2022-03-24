@@ -16,21 +16,21 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@k03mad/util": "4.5.0",
+    "@k03mad/util": "4.6.2",
     "chalk": "5.0.1",
     "hexyjs": "2.1.4",
     "lodash": "4.17.21",
-    "yargs": "17.3.1"
+    "yargs": "17.4.0"
   },
   "devDependencies": {
-    "@k03mad/eslint-config": "10.1.0",
-    "eslint": "8.10.0",
+    "@k03mad/eslint-config": "10.1.1",
+    "eslint": "8.11.0",
     "eslint-plugin-import": "2.25.4",
-    "eslint-plugin-jsdoc": "37.9.7",
+    "eslint-plugin-jsdoc": "38.0.6",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-simple-import-sort": "7.0.0",
     "eslint-plugin-sort-destructure-keys": "1.4.0",
-    "eslint-plugin-unicorn": "41.0.0",
+    "eslint-plugin-unicorn": "41.0.1",
     "husky": "7.0.4"
   },
   "scripts": {
