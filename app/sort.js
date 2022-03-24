@@ -73,7 +73,7 @@ const query = ({domain, list, method}) => next.query({
                 throw new Error([
                     red(`${list.toUpperCase()}: different domains count after sort`),
                     `Before: ${currentDomains.length}`,
-                    `After: ${afterDomains.length})`,
+                    `After: ${afterDomains.length}`,
                     `Diff: ${blue(_.xor(currentDomains, afterDomains).join(', '))}`,
                 ].join('\n'));
             }
